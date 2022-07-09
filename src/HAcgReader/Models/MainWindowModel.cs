@@ -13,7 +13,20 @@ public class MainWindowModel : INotifyPropertyChanged
     /// <summary>
     /// 文章列表
     /// </summary>
-    private readonly List<ArticleModel> _articles = new();
+    private readonly List<ArticleModel> _articles = new()
+    {
+        new()
+        {
+            Title = "test",
+            Link = "https://example.com",
+            CommentLink = "https://example.com",
+            MagnetLinks = new string[] { "a", "b" },
+            Creator = "creator",
+            PubDate = System.DateTime.Now,
+            Categories = new string[] { "cat1", "cat2" },
+            CommentCount = 50,
+        }
+    };
 
     /// <summary>
     /// 文章列表属性

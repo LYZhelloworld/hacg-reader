@@ -17,8 +17,20 @@ public class MagnetLinkCountConverter : IValueConverter
     /// <param name="parameter">参数</param>
     /// <param name="culture">当前使用的 <see cref="CultureInfo"/></param>
     /// <returns>转换后的描述</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> 为 <c>null</c> 时抛出</exception>
+    /// <exception cref="ArgumentException"><paramref name="targetType"/> 不为 <see cref="string"/> 类型时抛出</exception>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        if (targetType != typeof(string))
+        {
+            throw new ArgumentException(null, nameof(targetType));
+        }
+
         var magnetLinks = (string[])value;
         return $"{magnetLinks.Length} 个链接";
     }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using System.Windows.Controls;
 using HAcgReader.Models;
 
@@ -7,6 +8,7 @@ namespace HAcgReader;
 /// <summary>
 /// MainWindow.xaml 交互逻辑
 /// </summary>
+[ExcludeFromCodeCoverage]
 public partial class MainWindow : Window
 {
     /// <summary>
