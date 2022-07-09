@@ -4,14 +4,22 @@ using HAcgReader.Services;
 using HAcgReader.Test.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection;
 
 namespace HAcgReader.Test.Services;
 
+/// <summary>
+/// 测试 <see cref="RssFeedService"/>
+/// </summary>
 [TestClass]
+[ExcludeFromCodeCoverage]
 public class RssFeedServiceTest
 {
+    /// <summary>
+    /// 测试 <see cref="RssFeedService.FetchNextAsync"/>
+    /// </summary>
     [TestMethod]
     public void TestFetchNextAsync()
     {

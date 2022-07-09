@@ -6,8 +6,6 @@ using Moq;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 
 namespace HAcgReader.Test.Services;
 
