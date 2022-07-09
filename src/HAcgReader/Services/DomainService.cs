@@ -17,12 +17,7 @@ public sealed class DomainService : IDomainService, IDisposable
     /// <summary>
     /// 网页中链接的正则表达式
     /// </summary>
-    private const string LinkPattern = @"<a href=""https?://([a-zA-Z0-9\\.]*)"">";
-
-    /// <summary>
-    /// 编译好的正则表达式
-    /// </summary>
-    private static readonly Regex s_linkPattern = new(LinkPattern, RegexOptions.Compiled);
+    private static readonly Regex s_linkPattern = new(@"<a href=""https?://([a-zA-Z0-9\\.]*)"">", RegexOptions.Compiled);
 
     /// <summary>
     /// HTTP 客户端

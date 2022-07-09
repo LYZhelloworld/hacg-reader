@@ -21,4 +21,11 @@
     <ProjectReference Include="..\..\src\HAcgReader\HAcgReader.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="TestData\TestRssFeedPage.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

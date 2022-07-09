@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+  <channel>
+    <item>
+      <title>Item 1</title>
+      <link>https://example.com/wp/00001.html</link>
+      <comments>https://example.com/wp/00001.html#respond</comments>
+      <dc:creator><![CDATA[creator 1]]></dc:creator>
+      <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
+      <category><![CDATA[Cat 1]]></category>
+      <category><![CDATA[Cat 2]]></category>
+      <category><![CDATA[Cat 3]]></category>
+      <slash:comments>0</slash:comments>
+    </item>
+    <item>
+      <title>Item 2</title>
+      <link>https://example.com/wp/00002.html</link>
+      <comments>https://example.com/wp/00002.html#respond</comments>
+      <dc:creator><![CDATA[creator 2]]></dc:creator>
+      <pubDate>Sun, 02 Jan 2022 08:00:00 +0000</pubDate>
+      <category><![CDATA[Cat 4]]></category>
+      <slash:comments>50</slash:comments>
+    </item>
+  </channel>
+</rss>
