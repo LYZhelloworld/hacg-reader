@@ -6,9 +6,9 @@ using System.Windows;
 namespace HAcgReader.Models;
 
 /// <summary>
-/// <see cref="MainWindow"/> 的模型
+/// <see cref="IMainWindowModel"/> 的实现
 /// </summary>
-public class MainWindowModel : INotifyPropertyChanged
+public class MainWindowModel : IMainWindowModel
 {
     /// <summary>
     /// 空文章，仅做占位符用
@@ -20,9 +20,7 @@ public class MainWindowModel : INotifyPropertyChanged
     /// </summary>
     private readonly List<ArticleModel> _articles = new();
 
-    /// <summary>
-    /// 文章列表属性
-    /// </summary>
+    /// <inheritdoc/>
     public IEnumerable<ArticleModel> Articles => _articles;
 
     /// <summary>
@@ -30,9 +28,7 @@ public class MainWindowModel : INotifyPropertyChanged
     /// </summary>
     private int _selectedIndex = -1;
 
-    /// <summary>
-    /// 选中的列表项属性
-    /// </summary>
+    /// <inheritdoc/>
     public int SelectedIndex
     {
         get => _selectedIndex;
@@ -44,22 +40,14 @@ public class MainWindowModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(SelectedArticle));
         }
     }
-    /// <summary>
-    /// 是否显示详情页
-    /// </summary>
+
+    /// <inheritdoc/>
     public bool ShowDetails => SelectedIndex >= 0 && SelectedIndex < _articles.Count;
 
-    /// <summary>
-    /// 详情页可见性
-    /// </summary>
+    /// <inheritdoc/>
     public Visibility DetailVisibility => ShowDetails ? Visibility.Visible : Visibility.Hidden;
 
-    /// <summary>
-    /// 选中的文章
-    /// </summary>
-    /// <remarks>
-    /// 如果没有选中项，返回空白文章。
-    /// </remarks>
+    /// <inheritdoc/>
     public ArticleModel SelectedArticle
     {
         get
@@ -94,10 +82,7 @@ public class MainWindowModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new(propertyName));
     }
 
-    /// <summary>
-    /// 添加文章
-    /// </summary>
-    /// <param name="articles">要添加的文章</param>
+    /// <inheritdoc/>
     public void AddArticles(params ArticleModel[] articles)
     {
         _articles.AddRange(articles);

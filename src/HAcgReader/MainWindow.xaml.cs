@@ -14,12 +14,12 @@ public partial class MainWindow : Window
     /// <summary>
     /// 模型
     /// </summary>
-    private readonly MainWindowModel _model;
+    private readonly IMainWindowModel _model;
 
     /// <summary>
     /// 模型属性
     /// </summary>
-    public MainWindowModel Model => _model;
+    public IMainWindowModel Model => _model;
 
     /// <summary>
     /// 构造函数
