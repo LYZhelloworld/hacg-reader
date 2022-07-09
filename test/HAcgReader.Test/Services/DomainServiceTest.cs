@@ -29,13 +29,19 @@ public class DomainServiceTest
     /// <summary>
     /// 测试 <see cref="DomainService.GetDomain"/>
     /// </summary>
-    [TestMethod]
-    public void TestGetDomain()
+    [DataTestMethod]
+    [DataRow(HttpStatusCode.OK, true, "example.com")]
+    [DataRow(HttpStatusCode.NotFound, true, "")]
+    [DataRow(HttpStatusCode.OK, false, "")]
+    public void TestGetDomain(HttpStatusCode statusCode, bool useSampleResponse, string expected)
     {
         using var httpResponse = new HttpResponseMessage
         {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent(SampleResponse, Encoding.UTF8, "text/html")
+            StatusCode = statusCode,
+            Content = new StringContent(
+                useSampleResponse ? SampleResponse : string.Empty,
+                Encoding.UTF8,
+                "text/html")
         };
 
         var handler = new Mock<HttpMessageHandler>();
@@ -44,28 +50,7 @@ public class DomainServiceTest
         using var httpClient = new HttpClient(handler.Object);
         using var service = new DomainService(httpClient);
 
-        service.GetDomain().Should().Be("example.com");
-    }
-
-    /// <summary>
-    /// 测试 <see cref="DomainService.GetDomain"/> 获取失败的情况
-    /// </summary>
-    [TestMethod]
-    public void TestGetDomainFailed()
-    {
-        using var httpResponse = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent(string.Empty, Encoding.UTF8, "text/html")
-        };
-
-        var handler = new Mock<HttpMessageHandler>();
-        handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://acg.gy"), httpResponse);
-
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new DomainService(httpClient);
-
-        service.GetDomain().Should().Be(string.Empty);
+        service.GetDomain().Should().Be(expected);
     }
 
     private const string SampleResponse = @"

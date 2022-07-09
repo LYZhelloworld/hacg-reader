@@ -61,7 +61,7 @@ public sealed class DomainService : IDomainService, IDisposable
         var match = s_linkPattern.Match(response.Content.ReadAsStringAsync().Result);
         if (match.Success)
         {
-            return match.Groups[1].Value;
+            return match.Groups[1].Value.Trim();
         }
 
         return string.Empty;
