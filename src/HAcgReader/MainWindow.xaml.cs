@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using HAcgReader.Models;
 
 namespace HAcgReader;
@@ -27,5 +28,16 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         DataContext = _model;
+    }
+
+    /// <summary>
+    /// <see cref="ArticleList"/> 被选择的项目更改时触发
+    /// </summary>
+    /// <param name="sender">事件发送者</param>
+    /// <param name="e">事件参数</param>
+    private void ArticleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        _model.SelectedIndex = ArticleList.SelectedIndex;
+        //DetailPanel.GetBindingExpression(VisibilityProperty).UpdateTarget();
     }
 }

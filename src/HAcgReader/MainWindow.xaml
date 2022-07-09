@@ -25,7 +25,8 @@
                   Grid.Column="0"
                   ItemsSource="{Binding Articles}"
                   d:ItemsSource="{d:SampleData ItemCount=20}"
-                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                  SelectionChanged="ArticleList_SelectionChanged">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -62,7 +63,8 @@
         <!--#endregion-->
         <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
         <!--#region 右侧详情页-->
-        <StackPanel Grid.Column="2"
+        <StackPanel x:Name="DetailPanel"
+                    Grid.Column="2"
                     Margin="5,0,0,0"
                     Visibility="{Binding DetailVisibility}"
                     d:Visibility="Visible">

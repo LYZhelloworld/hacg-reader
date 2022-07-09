@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace HAcgReader.Models;
@@ -6,7 +8,7 @@ namespace HAcgReader.Models;
 /// <summary>
 /// <see cref="MainWindow"/> 的模型
 /// </summary>
-public class MainWindowModel
+public class MainWindowModel : INotifyPropertyChanged
 {
     /// <summary>
     /// 文章列表
@@ -21,8 +23,22 @@ public class MainWindowModel
     /// <summary>
     /// 选中的列表项
     /// </summary>
-    public int SelectedIndex { get; set; } = -1;
+    private int _selectedIndex = -1;
 
+    /// <summary>
+    /// 选中的列表项属性
+    /// </summary>
+    public int SelectedIndex
+    {
+        get => _selectedIndex;
+        set
+        {
+            _selectedIndex = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(DetailVisibility));
+            OnPropertyChanged(nameof(SelectedArticle));
+        }
+    }
     /// <summary>
     /// 是否显示详情页
     /// </summary>
@@ -59,10 +75,22 @@ public class MainWindowModel
     /// </summary>
     private static readonly ArticleModel s_emptyArticle = new();
 
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     /// <summary>
     /// 构造函数
     /// </summary>
     public MainWindowModel()
     {
+    }
+
+    /// <summary>
+    /// 属性改变事件处理
+    /// </summary>
+    /// <param name="propertyName">属性名</param>
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new(propertyName));
     }
 }
