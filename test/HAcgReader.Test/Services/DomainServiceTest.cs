@@ -5,7 +5,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Reflection;
 using System.Text;
+using System.Xml;
 
 namespace HAcgReader.Test.Services;
 
@@ -35,13 +37,16 @@ public class DomainServiceTest
     [DataRow(HttpStatusCode.OK, false, "")]
     public void TestGetDomain(HttpStatusCode statusCode, bool useSampleResponse, string expected)
     {
+        var htmlLocation = Path.Combine(
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+            "TestData",
+            "TestDomainServicePage.html");
+        var htmlContent = File.ReadAllBytes(htmlLocation);
+
         using var httpResponse = new HttpResponseMessage
         {
             StatusCode = statusCode,
-            Content = new StringContent(
-                useSampleResponse ? SampleResponse : string.Empty,
-                Encoding.UTF8,
-                "text/html")
+            Content = new ByteArrayContent(useSampleResponse ? htmlContent : Array.Empty<byte>())
         };
 
         var handler = new Mock<HttpMessageHandler>();
@@ -52,21 +57,4 @@ public class DomainServiceTest
 
         service.GetDomain().Should().Be(expected);
     }
-
-    private const string SampleResponse = @"
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <meta charset=""UTF-8"">
-        <title>琉璃神社★分享动漫快乐</title>
-        <body>
-        <div>
-        <p><a href=""https://example.com"">https://example.com</a></p>
-        <p>由于经常被不明人士攻击，神社会定时更换地址。</p>
-        <p>大家可以收藏这个页面到书签。</p>
-        <p>希望大家不要再被骗。</p>
-        <p>ACG.GY</p>
-        <p>ACG.公益</p>
-        </div>
-    ";
 }
