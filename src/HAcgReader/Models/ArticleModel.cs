@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HAcgReader.Models;
 
@@ -25,7 +27,7 @@ public record ArticleModel
     /// <summary>
     /// 解析出的磁力链接
     /// </summary>
-    public string[] MagnetLinks { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> MagnetLinks { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
     /// 作者名
@@ -40,7 +42,7 @@ public record ArticleModel
     /// <summary>
     /// 分类
     /// </summary>
-    public string[] Categories { get; set; } = Array.Empty<string>();
+    public IEnumerable<string> Categories { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
     /// 评论数量

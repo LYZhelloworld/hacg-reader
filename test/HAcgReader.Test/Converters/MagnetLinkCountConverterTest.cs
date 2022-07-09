@@ -1,8 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using HAcgReader.Converters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace HAcgReader.Test.Converters;
 

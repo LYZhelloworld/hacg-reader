@@ -11,22 +11,14 @@ namespace HAcgReader.Models;
 public class MainWindowModel : INotifyPropertyChanged
 {
     /// <summary>
+    /// 空文章，仅做占位符用
+    /// </summary>
+    private static readonly ArticleModel s_emptyArticle = new();
+
+    /// <summary>
     /// 文章列表
     /// </summary>
-    private readonly List<ArticleModel> _articles = new()
-    {
-        new()
-        {
-            Title = "test",
-            Link = "https://example.com",
-            CommentLink = "https://example.com",
-            MagnetLinks = new string[] { "a", "b" },
-            Creator = "creator",
-            PubDate = System.DateTime.Now,
-            Categories = new string[] { "cat1", "cat2" },
-            CommentCount = 50,
-        }
-    };
+    private readonly List<ArticleModel> _articles = new();
 
     /// <summary>
     /// 文章列表属性
@@ -83,11 +75,6 @@ public class MainWindowModel : INotifyPropertyChanged
         }
     }
 
-    /// <summary>
-    /// 空文章，仅做占位符用
-    /// </summary>
-    private static readonly ArticleModel s_emptyArticle = new();
-
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -105,5 +92,15 @@ public class MainWindowModel : INotifyPropertyChanged
     protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new(propertyName));
+    }
+
+    /// <summary>
+    /// 添加文章
+    /// </summary>
+    /// <param name="articles">要添加的文章</param>
+    public void AddArticles(params ArticleModel[] articles)
+    {
+        _articles.AddRange(articles);
+        OnPropertyChanged(nameof(Articles));
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using HAcgReader.Models;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
-using HAcgReader.Models;
 
 namespace HAcgReader;
 
@@ -20,7 +20,7 @@ public partial class MainWindow : Window
     /// 模型属性
     /// </summary>
     public MainWindowModel View => _model;
-    
+
     /// <summary>
     /// 构造函数
     /// </summary>
@@ -40,6 +40,5 @@ public partial class MainWindow : Window
     private void ArticleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         _model.SelectedIndex = ArticleList.SelectedIndex;
-        //DetailPanel.GetBindingExpression(VisibilityProperty).UpdateTarget();
     }
 }
