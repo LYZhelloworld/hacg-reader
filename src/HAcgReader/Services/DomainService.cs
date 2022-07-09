@@ -49,8 +49,16 @@ public sealed class DomainService : IDomainService, IDisposable
     /// <inheritdoc/>
     public string GetDomain()
     {
-        var response = _httpClient.GetStringAsync(new Uri(DomainPublisherUrl)).Result;
-        var match = s_linkPattern.Match(response);
+        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(DomainPublisherUrl));
+        request.Headers.AcceptCharset.Add(new("utf-8"));
+
+        var response = _httpClient.Send(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            return string.Empty;
+        }
+
+        var match = s_linkPattern.Match(response.Content.ReadAsStringAsync().Result);
         if (match.Success)
         {
             return match.Groups[1].Value;

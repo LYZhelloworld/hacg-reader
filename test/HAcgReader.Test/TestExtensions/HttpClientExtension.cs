@@ -21,6 +21,12 @@ public static class HttpClientExtension
         HttpMethod method, Uri uri, HttpResponseMessage response)
     {
         mock.Protected()
+            .Setup<HttpResponseMessage>(
+                "Send",
+                ItExpr.Is<HttpRequestMessage>(r => r.Method == method && r.RequestUri == uri),
+                ItExpr.IsAny<CancellationToken>())
+            .Returns(response);
+        mock.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
                 ItExpr.Is<HttpRequestMessage>(r => r.Method == method && r.RequestUri == uri),
