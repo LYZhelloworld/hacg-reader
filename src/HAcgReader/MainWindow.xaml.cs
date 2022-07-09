@@ -19,7 +19,7 @@ public partial class MainWindow : Window
     /// <summary>
     /// 模型属性
     /// </summary>
-    public MainWindowModel View => _model;
+    public MainWindowModel Model => _model;
 
     /// <summary>
     /// 构造函数

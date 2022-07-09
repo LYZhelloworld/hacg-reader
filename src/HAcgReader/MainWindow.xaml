@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HAcgReader"
         xmlns:c="clr-namespace:HAcgReader.Converters"
         mc:Ignorable="d"
-        DataContext="{Binding View, RelativeSource={RelativeSource Self}}"
+        DataContext="{Binding Model, RelativeSource={RelativeSource Self}}"
         Title="琉璃神社阅读器" Height="500" Width="900">
     <Window.Resources>
         <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
