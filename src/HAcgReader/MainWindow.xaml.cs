@@ -1,28 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using HAcgReader.Models;
 
-namespace HAcgReader
+namespace HAcgReader;
+
+/// <summary>
+/// MainWindow.xaml 交互逻辑
+/// </summary>
+public partial class MainWindow : Window
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// 模型
     /// </summary>
-    public partial class MainWindow : Window
+    private readonly MainWindowModel _model;
+
+    /// <summary>
+    /// 模型属性
+    /// </summary>
+    public MainWindowModel View => _model;
+    
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        _model = new MainWindowModel();
+
+        InitializeComponent();
+        DataContext = _model;
     }
 }

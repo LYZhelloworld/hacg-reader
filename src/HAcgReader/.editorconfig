@@ -127,6 +127,16 @@ csharp_preserve_single_line_blocks = true
 ###############################
 # VB Coding Conventions       #
 ###############################
+
+# IDE0160: 转换为块范围限定的 namespace
+csharp_style_namespace_declarations = file_scoped
+
+# IDE0005: Using 指令是不需要的。
+dotnet_diagnostic.IDE0005.severity = warning
+
+# IDE0161: 转换为文件范围限定的 namespace
+dotnet_diagnostic.IDE0161.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

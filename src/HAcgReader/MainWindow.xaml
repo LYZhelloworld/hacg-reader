@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HAcgReader"
+        xmlns:c="clr-namespace:HAcgReader.Converters"
         mc:Ignorable="d"
+        DataContext="{Binding View, RelativeSource={RelativeSource Self}}"
         Title="琉璃神社阅读器" Height="500" Width="900">
+    <Window.Resources>
+        <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <!--左侧列表-->
@@ -16,7 +21,9 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <!--#region 左侧列表-->
-        <ListView Grid.Column="0"
+        <ListView x:Name="ArticleList"
+                  Grid.Column="0"
+                  ItemsSource="{Binding Articles}"
                   d:ItemsSource="{d:SampleData ItemCount=20}"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
@@ -30,15 +37,14 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding PageTitle}"
+                        <TextBlock Text="{Binding Title}"
                                    FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Links}"
+                        <TextBlock Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
                                    Foreground="Gray"/>
-                        <ItemsControl ItemsSource="{Binding Categories}"
-                                      d:ItemsSource="{d:SampleData ItemCount=3}">
+                        <ItemsControl ItemsSource="{Binding Categories}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding}"
+                                    <TextBlock Text="{Binding .}"
                                                Foreground="#1982D1"
                                                Margin="0,0,5,0"/>
                                 </DataTemplate>
@@ -58,18 +64,21 @@
         <!--#region 右侧详情页-->
         <StackPanel Grid.Column="2"
                     Margin="5,0,0,0"
-                    DataContext="{Binding Detail}"
                     Visibility="{Binding DetailVisibility}"
                     d:Visibility="Visible">
-            <TextBlock d:Text="标题" FontWeight="Bold" FontSize="20" Margin="0,0,0,3"/>
-            <StackPanel>
+            <TextBlock Text="{Binding SelectedArticle.Title}"
+                       d:Text="标题"
+                       FontWeight="Bold"
+                       FontSize="20"
+                       Margin="0,0,0,3"/>
+            <StackPanel DataContext="{Binding SelectedArticle}">
                 <TextBlock Text="检测到的磁力链接（单击复制）" Margin="0,0,0,3"/>
-                <ItemsControl d:ItemsSource="{d:SampleData ItemCount=3}">
+                <ItemsControl ItemsSource="{Binding MagnetLinks}" d:ItemsSource="{d:SampleData ItemCount=3}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Margin="0,0,0,1">
                                 <Hyperlink>
-                                    <TextBlock Text="{Binding Link}"/>
+                                    <TextBlock Text="{Binding .}"/>
                                 </Hyperlink>
                             </TextBlock>
                         </DataTemplate>
