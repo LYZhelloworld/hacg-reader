@@ -26,7 +26,8 @@
                   ItemsSource="{Binding Articles}"
                   d:ItemsSource="{d:SampleData ItemCount=20}"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                  SelectionChanged="ArticleList_SelectionChanged">
+                  SelectionChanged="ArticleList_SelectionChanged"
+                  ScrollViewer.ScrollChanged="ArticleList_ScrollChanged">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
