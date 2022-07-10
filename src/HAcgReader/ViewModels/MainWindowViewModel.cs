@@ -93,10 +93,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// </summary>
     public int ProgressBarValue
     {
-        get => progressBarValue;
+        get => _progressBarValue;
         set
         {
-            progressBarValue = value;
+            _progressBarValue = value;
             OnPropertyChanged();
         }
     }
@@ -106,10 +106,23 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// </summary>
     public int ProgressBarMaximum
     {
-        get => progressBarMaximum;
+        get => _progressBarMaximum;
         set
         {
-            progressBarMaximum = value;
+            _progressBarMaximum = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 滚动条处于不确定状态
+    /// </summary>
+    public bool ProgressBarIsIndeterminate
+    {
+        get => _progressBarIsIndeterminate;
+        set
+        {
+            _progressBarIsIndeterminate = value;
             OnPropertyChanged();
         }
     }
@@ -165,12 +178,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// <summary>
     /// 滚动条当前值
     /// </summary>
-    private int progressBarValue;
+    private int _progressBarValue;
 
     /// <summary>
     /// 滚动条最大值
     /// </summary>
-    private int progressBarMaximum = 10;
+    private int _progressBarMaximum = 10;
+
+    /// <summary>
+    /// 滚动条处于不确定状态
+    /// </summary>
+    private bool _progressBarIsIndeterminate;
 
     /// <summary>
     /// 构造函数
@@ -205,6 +223,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
 
         IsFetchingButtonEnabled = false;
+        ProgressBarIsIndeterminate = true;
 
         // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
         var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false))
@@ -215,6 +234,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         var total = feedArticles.Length;
         ProgressBarValue = 0;
         ProgressBarMaximum = total;
+        ProgressBarIsIndeterminate = false;
 
         foreach (var article in feedArticles)
         {
@@ -230,7 +250,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
 
         IsFetchingButtonEnabled = true;
-        progressBarValue = 0;
+        _progressBarValue = 0;
         FetchCompleted?.Invoke(this, EventArgs.Empty);
     }
 

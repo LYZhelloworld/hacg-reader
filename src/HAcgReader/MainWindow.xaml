@@ -120,7 +120,8 @@
                      Grid.Column="2"
                      Value="{Binding ProgressBarValue}"
                      Minimum="0"
-                     Maximum="{Binding ProgressBarMaximum}" />
+                     Maximum="{Binding ProgressBarMaximum}"
+                     IsIndeterminate="{Binding ProgressBarIsIndeterminate}"/>
         <!--#endregion-->
     </Grid>
 </Window>
