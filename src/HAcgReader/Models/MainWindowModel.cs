@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Input;
 
 namespace HAcgReader.Models;
 
@@ -100,24 +100,30 @@ public class MainWindowModel : IMainWindowModel
     /// <inheritdoc/>
     public void AddArticles(params ArticleModel[] articles)
     {
-        _articles.AddRange(articles);
-        OnPropertyChanged(nameof(Articles));
+        foreach (var article in articles)
+        {
+            _articles.Add(article);
+        }
     }
 
     /// <inheritdoc/>
     public async Task FetchNewArticlesAsync()
     {
-        var newArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false))
-            .Select(async i => await _pageAnalyzerService.AnalyzeAsync(i).ConfigureAwait(false))
-            .Select(i => i.Result);
-        AddArticles(newArticles.ToArray());
+        var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false)).ToArray();
+        foreach (var article in feedArticles)
+        {
+            var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
+            AddArticles(analyzedArticle);
+        }
+
+        OnPropertyChanged(nameof(Articles));
     }
 
     /// <summary>
     /// 属性改变事件处理
     /// </summary>
     /// <param name="propertyName">属性名</param>
-    private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new(propertyName));
     }
