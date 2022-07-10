@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace HAcgReader.ViewModels;
 
@@ -18,39 +19,37 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// </summary>
     private static readonly ArticleModel s_emptyArticle = new();
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public ICommand FetchCommand { get; }
 
     /// <summary>
     /// 是否正在拉取新的文章
     /// </summary>
-    public bool IsFetching { get; private set; }
-
-    /// <summary>
-    /// 获取神社 RSS Feed
-    /// </summary>
-    private readonly IRssFeedService _rssFeedService;
-
-    /// <summary>
-    /// 分析页面内容，寻找磁链
-    /// </summary>
-    private readonly IPageAnalyzerService _pageAnalyzerService;
+    public bool IsFetching
+    {
+        get => _isFetching;
+        set
+        {
+            _isFetching = value;
+            OnPropertyChanged();
+        }
+    }
 
     /// <summary>
     /// 文章列表
     /// </summary>
-    private List<ArticleModel> _articles = new();
-
-    /// <inheritdoc/>
-    public IEnumerable<ArticleModel> Articles => _articles;
+    public IEnumerable<ArticleModel> Articles
+    {
+        get => _articles;
+        set
+        {
+            _articles = value.ToList();
+            OnPropertyChanged();
+        }
+    }
 
     public int SelectedIndex
     {
-        get
-        {
-            return _selectedIndex;
-        }
+        get => _selectedIndex;
         set
         {
             _selectedIndex = value;
@@ -61,10 +60,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     public ArticleModel SelectedArticle
     {
-        get
-        {
-            return _selectedArticle;
-        }
+        get => _selectedArticle;
         set
         {
             _selectedArticle = value;
@@ -83,11 +79,49 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <inheritdoc/>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public event EventHandler<StartedArticleProcessingEventArgs> StartedArticleProcessing;
+
+    public event EventHandler<ArticleProcessedEventArgs>? ArticleProcessed;
+
+    public event EventHandler AllArticlesProcessed;
+
+    /// <summary>
+    /// 获取神社 RSS Feed
+    /// </summary>
+    private readonly IRssFeedService _rssFeedService;
+
+    /// <summary>
+    /// 分析页面内容，寻找磁链
+    /// </summary>
+    private readonly IPageAnalyzerService _pageAnalyzerService;
+
+    /// <summary>
+    /// 是否正在拉取新的文章
+    /// </summary>
+    private bool _isFetching;
+
+    /// <summary>
+    /// 文章列表
+    /// </summary>
+    private List<ArticleModel> _articles = new();
+
     private int _selectedIndex = -1;
 
     private ArticleModel _selectedArticle = s_emptyArticle;
 
     private Visibility _detailPanelVisibility = Visibility.Hidden;
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="domain">神社域名</param>
+    public MainWindowViewModel(string domain)
+        : this(rssFeedService: new RssFeedService(domain), pageAnalyzerService: new PageAnalyzerService())
+    {
+    }
 
     /// <summary>
     /// 初始化所有依赖的构造函数
@@ -109,21 +143,26 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
 
         IsFetching = true;
-        
-        CommandManager.InvalidateRequerySuggested();
         Task.Run(async () =>
         {
             var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false)).ToArray();
+
+            var processed = 0;
+            var total = feedArticles.Length;
+            StartedArticleProcessing?.Invoke(this, new() { Total = total });
+
             foreach (var article in feedArticles)
             {
                 var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
                 _articles.Add(analyzedArticle);
                 _articles = _articles.ToList();
                 OnPropertyChanged(nameof(Articles));
+                processed++;
+                ArticleProcessed?.Invoke(this, new() { Processed = processed });
             }
 
             IsFetching = false;
-            CommandManager.InvalidateRequerySuggested();
+            AllArticlesProcessed?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -146,6 +185,15 @@ public class FetchCommand : ICommand
     public FetchCommand(MainWindowViewModel viewModel)
     {
         _viewModel = viewModel;
+        _viewModel.PropertyChanged += _viewModel_PropertyChanged;
+    }
+
+    private void _viewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(_viewModel.IsFetching))
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public bool CanExecute(object? parameter)
@@ -157,4 +205,14 @@ public class FetchCommand : ICommand
     {
         _viewModel.Fetch();
     }
+}
+
+public class StartedArticleProcessingEventArgs : EventArgs
+{
+    public int Total { get; init; }
+}
+
+public class ArticleProcessedEventArgs : EventArgs
+{
+    public int Processed { get; init; }
 }

@@ -2,6 +2,7 @@
 using HAcgReader.ViewModels;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Input;
 
 namespace HAcgReader;
 
@@ -32,10 +33,40 @@ public partial class MainWindow : Window
             Close();
         }
 
-        ViewModel = new MainWindowViewModel(new RssFeedService(domain), new PageAnalyzerService());
+        ViewModel = new MainWindowViewModel(domain);
+        ViewModel.StartedArticleProcessing += ViewModel_StartedArticleProcessing;
+        ViewModel.ArticleProcessed += ViewModel_ArticleProcessed;
+        ViewModel.AllArticlesProcessed += ViewModel_AllArticlesProcessed;
 
         InitializeComponent();
         DataContext = ViewModel;
         ViewModel.Fetch();
+    }
+
+    private void ViewModel_StartedArticleProcessing(object? sender, StartedArticleProcessingEventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            Progress.Maximum = e.Total;
+            CommandManager.InvalidateRequerySuggested();
+        });
+    }
+
+    private void ViewModel_ArticleProcessed(object? sender, ArticleProcessedEventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            Progress.Value = e.Processed;
+            CommandManager.InvalidateRequerySuggested();
+        });
+    }
+
+    private void ViewModel_AllArticlesProcessed(object? sender, System.EventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            Progress.Value = 0;
+            CommandManager.InvalidateRequerySuggested();
+        });
     }
 }
