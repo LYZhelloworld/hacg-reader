@@ -15,7 +15,7 @@ namespace HAcgReader.Services;
 /// <summary>
 /// 获取神社 RSS Feed
 /// </summary>
-public sealed class RssFeedService : IDisposable
+public sealed class RssFeedService : IRssFeedService, IDisposable
 {
     /// <summary>
     /// RSS Feed 链接格式
@@ -69,10 +69,7 @@ public sealed class RssFeedService : IDisposable
         _httpClient = httpClient;
     }
 
-    /// <summary>
-    /// 异步获取下一页 RSS Feed 内容
-    /// </summary>
-    /// <returns>异步获取的下一页内容</returns>
+    /// <inheritdoc/>
     public async Task<IEnumerable<ArticleModel>> FetchNextAsync()
     {
         var uri = new UriBuilder(_path);
