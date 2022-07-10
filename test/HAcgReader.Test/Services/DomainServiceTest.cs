@@ -22,7 +22,7 @@ public class DomainServiceTest
     [TestMethod]
     public void TestConstructor()
     {
-        using var service = new DomainService();
+        var service = new DomainService();
         service.Should().NotBeNull();
     }
 
@@ -50,8 +50,7 @@ public class DomainServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://acg.gy"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new DomainService(httpClient);
+        var service = new DomainService(handler.GetHttpClientFactory());
 
         service.GetDomain().Should().Be(expected);
     }

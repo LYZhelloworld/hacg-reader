@@ -33,7 +33,7 @@ public partial class MainWindow : Window
     /// </summary>
     public MainWindow()
     {
-        using var domainService = new DomainService();
+        var domainService = new DomainService();
         var domain = domainService.GetDomain();
         if (string.IsNullOrEmpty(domain))
         {

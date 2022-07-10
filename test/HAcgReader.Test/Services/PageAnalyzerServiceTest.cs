@@ -38,8 +38,7 @@ public class PageAnalyzerServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/00001.html"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new PageAnalyzerService(httpClient);
+        var service = new PageAnalyzerService(handler.GetHttpClientFactory());
 
         var article = new ArticleModel()
         {
@@ -69,8 +68,7 @@ public class PageAnalyzerServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/00001.html"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new PageAnalyzerService(httpClient);
+        var service = new PageAnalyzerService(handler.GetHttpClientFactory());
 
         var article = new ArticleModel()
         {
@@ -96,8 +94,7 @@ public class PageAnalyzerServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/00001.html"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new PageAnalyzerService(httpClient);
+        var service = new PageAnalyzerService(handler.GetHttpClientFactory());
 
         var article = new ArticleModel()
         {
@@ -114,7 +111,7 @@ public class PageAnalyzerServiceTest
     [TestMethod]
     public void TestAnalyzeAsyncNullArgument()
     {
-        using var service = new PageAnalyzerService();
+        var service = new PageAnalyzerService();
         var action = () => service.AnalyzeAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>().Wait();
     }

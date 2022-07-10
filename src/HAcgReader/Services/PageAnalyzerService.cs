@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HAcgReader.Factories;
 
 namespace HAcgReader.Services;
 
 /// <summary>
 /// 分析页面内容，寻找磁链
 /// </summary>
-public sealed class PageAnalyzerService : IPageAnalyzerService, IDisposable
+public class PageAnalyzerService : IPageAnalyzerService
 {
     /// <summary>
     /// 磁链哈希的正则表达式
@@ -20,25 +21,25 @@ public sealed class PageAnalyzerService : IPageAnalyzerService, IDisposable
     private static readonly Regex s_magnetLink = new(@"(?<![0-9a-fA-F])([0-9a-fA-F]{40})(?![0-9a-fA-F])", RegexOptions.Compiled);
 
     /// <summary>
-    /// HTTP 客户端
+    /// HTTP 客户端工厂类
     /// </summary>
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     /// <summary>
     /// 构造函数
     /// </summary>
     public PageAnalyzerService()
-        : this(new HttpClient())
+        : this(new HttpClientFactory())
     {
     }
 
     /// <summary>
     /// 初始化所有依赖的构造函数
     /// </summary>
-    /// <param name="httpClient">HTTP 客户端</param>
-    public PageAnalyzerService(HttpClient httpClient)
+    /// <param name="httpClientFactory">HTTP 客户端工厂类</param>
+    public PageAnalyzerService(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     /// <inheritdoc/>
@@ -51,7 +52,8 @@ public sealed class PageAnalyzerService : IPageAnalyzerService, IDisposable
 
         using var request = new HttpRequestMessage(HttpMethod.Get, article.Link);
         request.Headers.AcceptCharset.Add(new("utf-8"));
-        var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+        using var httpClient = _httpClientFactory.Create();
+        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -61,12 +63,6 @@ public sealed class PageAnalyzerService : IPageAnalyzerService, IDisposable
 
         article.MagnetLinks = Parse(await response.Content!.ReadAsStringAsync(default).ConfigureAwait(false));
         return article;
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        _httpClient.Dispose();
     }
 
     /// <summary>

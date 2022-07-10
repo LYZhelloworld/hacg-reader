@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using HAcgReader.Factories;
+using Moq;
 using Moq.Protected;
 using System.Diagnostics.CodeAnalysis;
 
@@ -32,5 +33,17 @@ public static class HttpClientExtension
                 ItExpr.Is<HttpRequestMessage>(r => r.Method == method && r.RequestUri == uri),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(response);
+    }
+
+    /// <summary>
+    /// 获取加载了测试 <see cref="HttpMessageHandler"/> 的 HTTP 客户端工厂类
+    /// </summary>
+    /// <param name="mock"><see cref="HttpMessageHandler"/> 的 <see cref="Mock{T}"/> 对象</param>
+    /// <returns>HTTP 客户端工厂类</returns>
+    public static IHttpClientFactory GetHttpClientFactory(this Mock<HttpMessageHandler> mock)
+    {
+        var httpClientFactory = new Mock<IHttpClientFactory>();
+        httpClientFactory.Setup(x => x.Create()).Returns(() => new HttpClient(mock.Object));
+        return httpClientFactory.Object;
     }
 }

@@ -7,7 +7,7 @@ namespace HAcgReader.Services;
 /// <summary>
 /// 分析页面内容，寻找磁链
 /// </summary>
-public interface IPageAnalyzerService : IDisposable
+public interface IPageAnalyzerService
 {
     /// <summary>
     /// 异步分析页面内容

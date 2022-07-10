@@ -8,7 +8,7 @@ namespace HAcgReader.Services;
 /// <summary>
 /// 获取神社 RSS Feed
 /// </summary>
-public interface IRssFeedService : IDisposable
+public interface IRssFeedService
 {
     /// <summary>
     /// 异步获取下一页 RSS Feed 内容

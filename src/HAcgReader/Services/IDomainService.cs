@@ -5,7 +5,7 @@ namespace HAcgReader.Services;
 /// <summary>
 /// 提供与神社域名相关的功能
 /// </summary>
-public interface IDomainService : IDisposable
+public interface IDomainService
 {
     /// <summary>
     /// 获取神社使用的域名

@@ -9,7 +9,7 @@ namespace HAcgReader.Models;
 /// <summary>
 /// <see cref="MainWindow"/> 的模型
 /// </summary>
-public interface IMainWindowModel : INotifyPropertyChanged, IDisposable
+public interface IMainWindowModel : INotifyPropertyChanged
 {
     /// <summary>
     /// 文章列表属性

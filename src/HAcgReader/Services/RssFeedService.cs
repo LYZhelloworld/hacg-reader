@@ -1,4 +1,5 @@
-﻿using HAcgReader.Models;
+﻿using HAcgReader.Factories;
+using HAcgReader.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,7 +16,7 @@ namespace HAcgReader.Services;
 /// <summary>
 /// 获取神社 RSS Feed
 /// </summary>
-public sealed class RssFeedService : IRssFeedService, IDisposable
+public class RssFeedService : IRssFeedService
 {
     /// <summary>
     /// RSS Feed 链接格式
@@ -33,9 +34,9 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
     private readonly string _path;
 
     /// <summary>
-    /// HTTP 客户端
+    /// HTTP 客户端工厂类
     /// </summary>
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     /// <summary>
     /// RSS Feed 页数
@@ -48,7 +49,7 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
     /// <param name="domain">神社域名</param>
     /// <exception cref="ArgumentException">域名为空时抛出</exception>
     public RssFeedService(string domain)
-        : this(domain, new HttpClient())
+        : this(domain, new HttpClientFactory())
     {
     }
 
@@ -56,9 +57,9 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
     /// 初始化所有依赖的构造函数
     /// </summary>
     /// <param name="domain">神社域名</param>
-    /// <param name="httpClient">HTTP 客户端</param>
+    /// <param name="httpClientFactory">HTTP 客户端工厂类</param>
     /// <exception cref="ArgumentException">域名为空时抛出</exception>
-    public RssFeedService(string domain, HttpClient httpClient)
+    public RssFeedService(string domain, IHttpClientFactory httpClientFactory)
     {
         if (string.IsNullOrEmpty(domain))
         {
@@ -66,7 +67,7 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
         }
 
         _path = string.Format(CultureInfo.InvariantCulture, UriFormat, domain);
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     /// <inheritdoc/>
@@ -84,7 +85,8 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
 
         using var request = new HttpRequestMessage(HttpMethod.Get, uri.Uri);
         request.Headers.AcceptCharset.Add(new("utf-8"));
-        var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+        using var httpClient = _httpClientFactory.Create();
+        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -95,12 +97,6 @@ public sealed class RssFeedService : IRssFeedService, IDisposable
         var result = Parse(await response.Content!.ReadAsStreamAsync(default).ConfigureAwait(false));
         _page++;
         return result;
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        _httpClient.Dispose();
     }
 
     /// <summary>

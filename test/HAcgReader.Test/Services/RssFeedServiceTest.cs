@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using HAcgReader.Factories;
 using HAcgReader.Models;
 using HAcgReader.Services;
 using HAcgReader.Test.TestHelpers;
@@ -28,7 +29,7 @@ public class RssFeedServiceTest
     [TestMethod]
     public void TestConstructor()
     {
-        using var service = new RssFeedService("example.com");
+        var service = new RssFeedService("example.com");
         service.Should().NotBeNull();
 
         var action = () => { var service = new RssFeedService(""); };
@@ -61,8 +62,7 @@ public class RssFeedServiceTest
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed"), httpResponse);
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed?paged=2"), errorHttpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new RssFeedService("example.com", httpClient);
+        var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
         var pages = service.FetchNextAsync();
         pages.Result.Should().BeEquivalentTo(new ArticleModel[]
@@ -112,8 +112,7 @@ public class RssFeedServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new RssFeedService("example.com", httpClient);
+        var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
         var pages = service.FetchNextAsync();
         pages.Result.Should().BeEquivalentTo(Array.Empty<ArticleModel>());
@@ -134,8 +133,7 @@ public class RssFeedServiceTest
         var handler = new Mock<HttpMessageHandler>();
         handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed"), httpResponse);
 
-        using var httpClient = new HttpClient(handler.Object);
-        using var service = new RssFeedService("example.com", httpClient);
+        var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
         var pages = service.FetchNextAsync();
         pages.Result.Should().BeEquivalentTo(new ArticleModel[] { new() });

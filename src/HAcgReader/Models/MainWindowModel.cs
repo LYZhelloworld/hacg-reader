@@ -12,7 +12,7 @@ namespace HAcgReader.Models;
 /// <summary>
 /// <see cref="IMainWindowModel"/> 的实现
 /// </summary>
-public sealed class MainWindowModel : IMainWindowModel, IDisposable
+public class MainWindowModel : IMainWindowModel
 {
     /// <summary>
     /// 空文章，仅做占位符用
@@ -115,13 +115,6 @@ public sealed class MainWindowModel : IMainWindowModel, IDisposable
             .Select(async i => await _pageAnalyzerService.AnalyzeAsync(i).ConfigureAwait(false))
             .Select(i => i.Result);
         AddArticles(newArticles.ToArray());
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        _rssFeedService.Dispose();
-        _pageAnalyzerService.Dispose();
     }
 
     /// <summary>

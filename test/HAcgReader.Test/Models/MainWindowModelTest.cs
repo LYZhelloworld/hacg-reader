@@ -35,7 +35,7 @@ public class MainWindowModelTest
     [TestMethod]
     public void TestConstructor()
     {
-        using var model = new MainWindowModel("example.com");
+        var model = new MainWindowModel("example.com");
         model.Should().NotBeNull();
     }
 
@@ -47,7 +47,7 @@ public class MainWindowModelTest
     {
         var eventRaised = new Dictionary<string, int>();
 
-        using var model = new MainWindowModel(
+        var model = new MainWindowModel(
             rssFeedService: Mock.Of<IRssFeedService>(),
             pageAnalyzerService: Mock.Of<IPageAnalyzerService>());
         model.PropertyChanged += (_, args) =>
@@ -87,7 +87,7 @@ public class MainWindowModelTest
     [TestMethod]
     public void TestWithoutEventListener()
     {
-        using var model = new MainWindowModel(
+        var model = new MainWindowModel(
             rssFeedService: Mock.Of<IRssFeedService>(),
             pageAnalyzerService: Mock.Of<IPageAnalyzerService>());
 
@@ -126,7 +126,7 @@ public class MainWindowModelTest
         pageAnalyzerService.Setup(x => x.AnalyzeAsync(new() { Title = "title 2" }))
             .ReturnsAsync(new ArticleModel() { Title = "title 2", MagnetLinks = new string[] { "link 2" } });
 
-        using var model = new MainWindowModel(
+        var model = new MainWindowModel(
             rssFeedService: rssFeedService.Object,
             pageAnalyzerService: pageAnalyzerService.Object);
 
