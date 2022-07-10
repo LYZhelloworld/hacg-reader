@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Test", "test\HAcgReader.Test\HAcgReader.Test.csproj", "{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Core", "src\HAcgReader.Core\HAcgReader.Core.csproj", "{CBC1F226-5284-49D7-B071-EB3E33F00F2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
