@@ -11,6 +11,11 @@ namespace HAcgReader.Services;
 public class PageAnalyzerService : IPageAnalyzerService
 {
     /// <summary>
+    /// 磁链前缀
+    /// </summary>
+    private const string MagnetPrefix = "magnet:?xt=urn:btih:";
+
+    /// <summary>
     /// 磁链哈希的正则表达式
     /// </summary>
     private static readonly Regex s_magnetLink = new(@"(?<![0-9a-fA-F])([0-9a-fA-F]{40})(?![0-9a-fA-F])", RegexOptions.Compiled);
@@ -85,6 +90,7 @@ public class PageAnalyzerService : IPageAnalyzerService
                 var matches = s_magnetLink.Matches(innerHtml);
                 return matches.Select(match => match.Groups[1].Value).Distinct();
             })
-            .SelectMany(i => i);
+            .SelectMany(i => i)
+            .Select(i => MagnetPrefix + i);
     }
 }

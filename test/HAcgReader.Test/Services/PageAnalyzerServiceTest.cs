@@ -48,8 +48,8 @@ public class PageAnalyzerServiceTest
 
         article.MagnetLinks.Should().BeEquivalentTo(new string[]
         {
-            "0123456789abcdef0123456789abcdef01234567",
-            "9876543210abcdef0123456789abcdef01234567",
+            "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567",
+            "magnet:?xt=urn:btih:9876543210abcdef0123456789abcdef01234567",
         });
     }
 

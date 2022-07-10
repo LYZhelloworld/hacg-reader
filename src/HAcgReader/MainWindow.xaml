@@ -95,7 +95,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Margin="0,0,0,1">
-                                <Hyperlink>
+                                <Hyperlink NavigateUri="{Binding .}" RequestNavigate="MagnetLink_RequestNavigate">
                                     <TextBlock Text="{Binding .}"/>
                                 </Hyperlink>
                             </TextBlock>
@@ -107,9 +107,11 @@
                     <TextBlock Text="{Binding Creator}" d:Text="Creator"/>
                     发布于 <TextBlock Text="{Binding PubDate}" d:Text="2020年1月1日"/>
                     |
-                    <Hyperlink NavigateUri="{Binding Link}">阅读文章</Hyperlink>
+                    <Hyperlink NavigateUri="{Binding Link}" RequestNavigate="Link_RequestNavigate">
+                        阅读文章
+                    </Hyperlink>
                     |
-                    <Hyperlink NavigateUri="{Binding CommentLink}">
+                    <Hyperlink NavigateUri="{Binding CommentLink}" RequestNavigate="Link_RequestNavigate">
                         <TextBlock Text="{Binding CommentCount}" d:Text="50"/> 条评论
                     </Hyperlink>
                 </TextBlock>
