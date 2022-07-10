@@ -1,4 +1,5 @@
 ﻿using HAcgReader.Models;
+using HAcgReader.Services;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +27,18 @@ public partial class MainWindow : Window
     /// </summary>
     public MainWindow()
     {
-        _model = new MainWindowModel();
+        using var domainService = new DomainService();
+        var domain = domainService.GetDomain();
+        if (string.IsNullOrEmpty(domain))
+        {
+            MessageBox.Show("找不到神社域名。请确保 acg.gy 能够正常访问。",
+                            "HAcgReader",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+            Close();
+        }
+
+        _model = new MainWindowModel(domain);
 
         InitializeComponent();
         DataContext = _model;

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace HAcgReader.Models;
@@ -7,7 +9,7 @@ namespace HAcgReader.Models;
 /// <summary>
 /// <see cref="MainWindow"/> 的模型
 /// </summary>
-public interface IMainWindowModel : INotifyPropertyChanged
+public interface IMainWindowModel : INotifyPropertyChanged, IDisposable
 {
     /// <summary>
     /// 文章列表属性
@@ -42,4 +44,10 @@ public interface IMainWindowModel : INotifyPropertyChanged
     /// </summary>
     /// <param name="articles">要添加的文章</param>
     void AddArticles(params ArticleModel[] articles);
+
+    /// <summary>
+    /// 异步拉取最新的文章
+    /// </summary>
+    /// <returns>该任务</returns>
+    Task FetchNewArticlesAsync();
 }

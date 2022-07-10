@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using HAcgReader.Models;
+using HAcgReader.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HAcgReader.Test.Models;
@@ -28,14 +30,26 @@ public class MainWindowModelTest
     };
 
     /// <summary>
-    /// 测试 <see cref="MainWindowModel"/>
+    /// 测试 <see cref="MainWindowModel(string)"/>
+    /// </summary>
+    [TestMethod]
+    public void TestConstructor()
+    {
+        using var model = new MainWindowModel("example.com");
+        model.Should().NotBeNull();
+    }
+
+    /// <summary>
+    /// 测试 <see cref="MainWindowModel.AddArticles(ArticleModel[])"/>
     /// </summary>
     [TestMethod]
     public void Test()
     {
         var eventRaised = new Dictionary<string, int>();
 
-        var model = new MainWindowModel();
+        using var model = new MainWindowModel(
+            rssFeedService: Mock.Of<IRssFeedService>(),
+            pageAnalyzerService: Mock.Of<IPageAnalyzerService>());
         model.PropertyChanged += (_, args) =>
         {
             var propName = args.PropertyName!;
@@ -68,12 +82,14 @@ public class MainWindowModelTest
     }
 
     /// <summary>
-    /// 在没有事件监听器的情况下测试 <see cref="MainWindowModel"/>
+    /// 测试 <see cref="MainWindowModel.AddArticles(ArticleModel[])"/> 在没有事件监听器时的情况
     /// </summary>
     [TestMethod]
     public void TestWithoutEventListener()
     {
-        var model = new MainWindowModel();
+        using var model = new MainWindowModel(
+            rssFeedService: Mock.Of<IRssFeedService>(),
+            pageAnalyzerService: Mock.Of<IPageAnalyzerService>());
 
         model.Articles.Should().BeEmpty();
 
@@ -89,5 +105,37 @@ public class MainWindowModelTest
         model.ShowDetails.Should().BeTrue();
         model.DetailVisibility.Should().Be(System.Windows.Visibility.Visible);
         model.SelectedArticle.Title.Should().Be("test");
+    }
+
+    /// <summary>
+    /// 测试 <see cref="MainWindowModel.FetchNewArticlesAsync"/>
+    /// </summary>
+    [TestMethod]
+    public void TestFetchNewArticlesAsync()
+    {
+        var rssFeedService = new Mock<IRssFeedService>();
+        rssFeedService.Setup(x => x.FetchNextAsync()).ReturnsAsync(new ArticleModel[]
+        {
+            new() { Title = "title 1" },
+            new() { Title = "title 2" },
+        });
+
+        var pageAnalyzerService = new Mock<IPageAnalyzerService>();
+        pageAnalyzerService.Setup(x => x.AnalyzeAsync(new() { Title = "title 1" }))
+            .ReturnsAsync(new ArticleModel() { Title = "title 1", MagnetLinks = new string[] { "link 1" } });
+        pageAnalyzerService.Setup(x => x.AnalyzeAsync(new() { Title = "title 2" }))
+            .ReturnsAsync(new ArticleModel() { Title = "title 2", MagnetLinks = new string[] { "link 2" } });
+
+        using var model = new MainWindowModel(
+            rssFeedService: rssFeedService.Object,
+            pageAnalyzerService: pageAnalyzerService.Object);
+
+        model.FetchNewArticlesAsync().Wait();
+
+        model.Articles.Should().BeEquivalentTo(new ArticleModel[]
+        {
+            new() { Title = "title 1", MagnetLinks = new string[] { "link 1" } },
+            new() { Title = "title 2", MagnetLinks = new string[] { "link 2" } },
+        });
     }
 }
