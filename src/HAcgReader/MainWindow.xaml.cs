@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace HAcgReader;
 
@@ -62,11 +63,20 @@ public partial class MainWindow : Window
             return;
         }
 
+        FetchButton.IsEnabled = false;
         _fetchingNewArticles = true;
         Task.Run(async () =>
         {
             await _model.FetchNewArticlesAsync().ConfigureAwait(false);
+
+            var selected = ArticleList.SelectedIndex;
+            ArticleList.ItemsSource = null;
+            ArticleList.Items.Clear();
+            ArticleList.ItemsSource = _model.Articles;
+            ArticleList.SelectedIndex = selected;
+
             _fetchingNewArticles = false;
+            FetchButton.IsEnabled = true;
         });
     }
 
@@ -78,25 +88,11 @@ public partial class MainWindow : Window
     private void ArticleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         _model.SelectedIndex = ArticleList.SelectedIndex;
+        DetailPanel.Visibility = _model.ShowDetails ? Visibility.Visible : Visibility.Hidden;
     }
 
-    /// <summary>
-    /// <see cref="ArticleList"/> 滚动时触发，用于拉取新文章
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    private void FetchButton_Click(object sender, RoutedEventArgs e)
     {
-        // 避免重复触发
-        if (_fetchingNewArticles)
-        {
-            return;
-        }
-
-        // 向下滚动，且滚动超出范围
-        if (e.VerticalChange > 0 && e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight)
-        {
-            FetchNewArticles();
-        }
+        FetchNewArticles();
     }
 }

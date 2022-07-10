@@ -69,15 +69,12 @@ public class MainWindowModelTest
 
         model.SelectedIndex.Should().Be(-1);
         model.ShowDetails.Should().BeFalse();
-        model.DetailVisibility.Should().Be(System.Windows.Visibility.Hidden);
         model.SelectedArticle.Title.Should().BeEmpty();
 
         model.SelectedIndex = 0;
         model.ShowDetails.Should().BeTrue();
-        model.DetailVisibility.Should().Be(System.Windows.Visibility.Visible);
         model.SelectedArticle.Title.Should().Be("test");
         eventRaised[nameof(model.SelectedIndex)].Should().Be(1);
-        eventRaised[nameof(model.DetailVisibility)].Should().Be(1);
         eventRaised[nameof(model.SelectedArticle)].Should().Be(1);
     }
 
@@ -98,12 +95,10 @@ public class MainWindowModelTest
 
         model.SelectedIndex.Should().Be(-1);
         model.ShowDetails.Should().BeFalse();
-        model.DetailVisibility.Should().Be(System.Windows.Visibility.Hidden);
         model.SelectedArticle.Title.Should().BeEmpty();
 
         model.SelectedIndex = 0;
         model.ShowDetails.Should().BeTrue();
-        model.DetailVisibility.Should().Be(System.Windows.Visibility.Visible);
         model.SelectedArticle.Title.Should().Be("test");
     }
 

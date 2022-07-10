@@ -20,14 +20,20 @@
             <!--右侧详情页-->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
         <!--#region 左侧列表-->
         <ListView x:Name="ArticleList"
                   Grid.Column="0"
+                  Grid.Row="0"
+                  Margin="0,0,0,5"
                   ItemsSource="{Binding Articles}"
                   d:ItemsSource="{d:SampleData ItemCount=20}"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                  SelectionChanged="ArticleList_SelectionChanged"
-                  ScrollViewer.ScrollChanged="ArticleList_ScrollChanged">
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  SelectionChanged="ArticleList_SelectionChanged">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -61,13 +67,20 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button Grid.Column="0"
+                Grid.Row="1"
+                x:Name="FetchButton"
+                Click="FetchButton_Click">
+            更多
+        </Button>
         <!--#endregion-->
-        <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Stretch"/>
         <!--#region 右侧详情页-->
         <StackPanel x:Name="DetailPanel"
                     Grid.Column="2"
+                    Grid.RowSpan="2"
                     Margin="5,0,0,0"
-                    Visibility="{Binding DetailVisibility}"
+                    Visibility="Hidden"
                     d:Visibility="Visible">
             <TextBlock Text="{Binding SelectedArticle.Title}"
                        d:Text="标题"

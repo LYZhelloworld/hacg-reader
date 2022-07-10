@@ -50,16 +50,12 @@ public class MainWindowModel : IMainWindowModel
         {
             _selectedIndex = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(DetailVisibility));
             OnPropertyChanged(nameof(SelectedArticle));
         }
     }
 
     /// <inheritdoc/>
     public bool ShowDetails => SelectedIndex >= 0 && SelectedIndex < _articles.Count;
-
-    /// <inheritdoc/>
-    public Visibility DetailVisibility => ShowDetails ? Visibility.Visible : Visibility.Hidden;
 
     /// <inheritdoc/>
     public ArticleModel SelectedArticle

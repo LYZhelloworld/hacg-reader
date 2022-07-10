@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 
 namespace HAcgReader.Converters;
@@ -31,7 +33,7 @@ public class MagnetLinkCountConverter : IValueConverter
             throw new ArgumentException(null, nameof(targetType));
         }
 
-        var magnetLinks = (string[])value;
+        var magnetLinks = ((IEnumerable<string>)value).ToArray();
         return $"{magnetLinks.Length} 个链接";
     }
 

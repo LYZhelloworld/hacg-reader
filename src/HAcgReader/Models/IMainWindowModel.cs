@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace HAcgReader.Models;
 
@@ -15,11 +13,6 @@ public interface IMainWindowModel : INotifyPropertyChanged
     /// 文章列表属性
     /// </summary>
     IEnumerable<ArticleModel> Articles { get; }
-
-    /// <summary>
-    /// 详情页可见性
-    /// </summary>
-    Visibility DetailVisibility { get; }
 
     /// <summary>
     /// 选中的文章
