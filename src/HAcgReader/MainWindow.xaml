@@ -113,7 +113,12 @@
                 </TextBlock>
             </StackPanel>
         </StackPanel>
-        <ProgressBar x:Name="Progress" Grid.Row="1" Grid.Column="2" Value="0" Minimum="0" Maximum="10" />
+        <ProgressBar x:Name="Progress"
+                     Grid.Row="1"
+                     Grid.Column="2"
+                     Value="{Binding ProgressBarValue}"
+                     Minimum="0"
+                     Maximum="{Binding ProgressBarMaximum}" />
         <!--#endregion-->
     </Grid>
 </Window>

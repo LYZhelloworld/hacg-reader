@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace HAcgReader.ViewModels;
 
@@ -19,17 +18,15 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// </summary>
     private static readonly ArticleModel s_emptyArticle = new();
 
-    public ICommand FetchCommand { get; }
-
     /// <summary>
-    /// 是否正在拉取新的文章
+    /// 拉取按钮是否有效
     /// </summary>
-    public bool IsFetching
+    public bool IsFetchingButtonEnabled
     {
-        get => _isFetching;
+        get => _isFetchingButtonEnabled;
         set
         {
-            _isFetching = value;
+            _isFetchingButtonEnabled = value;
             OnPropertyChanged();
         }
     }
@@ -79,14 +76,31 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public int ProgressBarValue
+    {
+        get => progressBarValue;
+        set
+        {
+            progressBarValue = value;
+            OnPropertyChanged();
+        }
+    }
+    public int ProgressBarMaximum
+    {
+        get => progressBarMaximum;
+        set
+        {
+            progressBarMaximum = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ICommand FetchCommand { get; }
+
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public event EventHandler<StartedArticleProcessingEventArgs> StartedArticleProcessing;
-
-    public event EventHandler<ArticleProcessedEventArgs>? ArticleProcessed;
-
-    public event EventHandler AllArticlesProcessed;
+    public event EventHandler? FetchCompleted;
 
     /// <summary>
     /// 获取神社 RSS Feed
@@ -101,7 +115,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// <summary>
     /// 是否正在拉取新的文章
     /// </summary>
-    private bool _isFetching;
+    private bool _isFetchingButtonEnabled = true;
 
     /// <summary>
     /// 文章列表
@@ -113,6 +127,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private ArticleModel _selectedArticle = s_emptyArticle;
 
     private Visibility _detailPanelVisibility = Visibility.Hidden;
+
+    private int progressBarValue;
+
+    private int progressBarMaximum = 10;
 
     /// <summary>
     /// 构造函数
@@ -135,35 +153,35 @@ public class MainWindowViewModel : INotifyPropertyChanged
         FetchCommand = new FetchCommand(this);
     }
 
-    public void Fetch()
+    public async void FetchAsync()
     {
-        if (IsFetching)
+        if (!IsFetchingButtonEnabled)
         {
             return;
         }
 
-        IsFetching = true;
-        Task.Run(async () =>
+        IsFetchingButtonEnabled = false;
+
+        var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false)).ToArray();
+
+        var processed = 0;
+        var total = feedArticles.Length;
+        ProgressBarValue = 0;
+        ProgressBarMaximum = total;
+
+        foreach (var article in feedArticles)
         {
-            var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false)).ToArray();
+            var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
+            _articles.Add(analyzedArticle);
+            _articles = _articles.ToList();
+            OnPropertyChanged(nameof(Articles));
+            processed++;
+            ProgressBarValue = processed;
+        }
 
-            var processed = 0;
-            var total = feedArticles.Length;
-            StartedArticleProcessing?.Invoke(this, new() { Total = total });
-
-            foreach (var article in feedArticles)
-            {
-                var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
-                _articles.Add(analyzedArticle);
-                _articles = _articles.ToList();
-                OnPropertyChanged(nameof(Articles));
-                processed++;
-                ArticleProcessed?.Invoke(this, new() { Processed = processed });
-            }
-
-            IsFetching = false;
-            AllArticlesProcessed?.Invoke(this, EventArgs.Empty);
-        });
+        IsFetchingButtonEnabled = true;
+        progressBarValue = 0;
+        FetchCompleted?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
@@ -180,39 +198,30 @@ public class FetchCommand : ICommand
 {
     private readonly MainWindowViewModel _viewModel;
 
-    public event EventHandler? CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged
+    {
+        add
+        {
+            CommandManager.RequerySuggested += value;
+        }
+        remove
+        {
+            CommandManager.RequerySuggested -= value;
+        }
+    }
 
     public FetchCommand(MainWindowViewModel viewModel)
     {
         _viewModel = viewModel;
-        _viewModel.PropertyChanged += _viewModel_PropertyChanged;
-    }
-
-    private void _viewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(_viewModel.IsFetching))
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
     }
 
     public bool CanExecute(object? parameter)
     {
-        return true;
+        return _viewModel.IsFetchingButtonEnabled;
     }
 
     public void Execute(object? parameter)
     {
-        _viewModel.Fetch();
+        _viewModel.FetchAsync();
     }
-}
-
-public class StartedArticleProcessingEventArgs : EventArgs
-{
-    public int Total { get; init; }
-}
-
-public class ArticleProcessedEventArgs : EventArgs
-{
-    public int Processed { get; init; }
 }

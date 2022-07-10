@@ -1,5 +1,7 @@
 ﻿using HAcgReader.Services;
 using HAcgReader.ViewModels;
+using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Input;
@@ -34,39 +36,15 @@ public partial class MainWindow : Window
         }
 
         ViewModel = new MainWindowViewModel(domain);
-        ViewModel.StartedArticleProcessing += ViewModel_StartedArticleProcessing;
-        ViewModel.ArticleProcessed += ViewModel_ArticleProcessed;
-        ViewModel.AllArticlesProcessed += ViewModel_AllArticlesProcessed;
+        ViewModel.FetchCompleted += ViewModel_FetchCompleted;
 
         InitializeComponent();
         DataContext = ViewModel;
-        ViewModel.Fetch();
+        ViewModel.FetchAsync();
     }
 
-    private void ViewModel_StartedArticleProcessing(object? sender, StartedArticleProcessingEventArgs e)
+    private void ViewModel_FetchCompleted(object? sender, EventArgs e)
     {
-        Dispatcher.Invoke(() =>
-        {
-            Progress.Maximum = e.Total;
-            CommandManager.InvalidateRequerySuggested();
-        });
-    }
-
-    private void ViewModel_ArticleProcessed(object? sender, ArticleProcessedEventArgs e)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            Progress.Value = e.Processed;
-            CommandManager.InvalidateRequerySuggested();
-        });
-    }
-
-    private void ViewModel_AllArticlesProcessed(object? sender, System.EventArgs e)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            Progress.Value = 0;
-            CommandManager.InvalidateRequerySuggested();
-        });
+        Dispatcher.Invoke(() => CommandManager.InvalidateRequerySuggested());
     }
 }
