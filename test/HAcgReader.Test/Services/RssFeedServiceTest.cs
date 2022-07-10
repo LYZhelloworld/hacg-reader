@@ -18,6 +18,24 @@ namespace HAcgReader.Test.Services;
 public class RssFeedServiceTest
 {
     /// <summary>
+    /// 测试用 XML 头
+    /// </summary>
+    private const string TestXmlHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>";
+
+    /// <summary>
+    /// 测试 <see cref="RssFeedService(string)"/> 和 <see cref="RssFeedService(string, HttpClient)"/>
+    /// </summary>
+    [TestMethod]
+    public void TestConstructor()
+    {
+        using var service = new RssFeedService("example.com");
+        service.Should().NotBeNull();
+
+        var action = () => { var service = new RssFeedService(""); };
+        action.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
     /// 测试 <see cref="RssFeedService.FetchNextAsync"/>
     /// </summary>
     [TestMethod]
@@ -74,5 +92,52 @@ public class RssFeedServiceTest
         // 下一页应为空
         pages = service.FetchNextAsync();
         pages.Result.Should().BeEmpty();
+    }
+
+    /// <summary>
+    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在根标签或者 <c>&lt;channel&gt;</c> 标签丢失时的情况
+    /// </summary>
+    /// <param name="content">测试 XML 的内容</param>
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow(@"<rss/>")]
+    public void TestFetchNextAsyncEmptyTags(string content)
+    {
+        using var httpResponse = new HttpResponseMessage()
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(TestXmlHeader + content),
+        };
+
+        var handler = new Mock<HttpMessageHandler>();
+        handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed"), httpResponse);
+
+        using var httpClient = new HttpClient(handler.Object);
+        using var service = new RssFeedService("example.com", httpClient);
+
+        var pages = service.FetchNextAsync();
+        pages.Result.Should().BeEquivalentTo(Array.Empty<ArticleModel>());
+    }
+
+    /// <summary>
+    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
+    /// </summary>
+    [TestMethod]
+    public void TestFetchNextAsyncEmptyTagsInItem()
+    {
+        using var httpResponse = new HttpResponseMessage()
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(TestXmlHeader + @"<rss><channel><item/></channel></rss>"),
+        };
+
+        var handler = new Mock<HttpMessageHandler>();
+        handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://example.com/wp/feed"), httpResponse);
+
+        using var httpClient = new HttpClient(handler.Object);
+        using var service = new RssFeedService("example.com", httpClient);
+
+        var pages = service.FetchNextAsync();
+        pages.Result.Should().BeEquivalentTo(new ArticleModel[] { new() });
     }
 }
