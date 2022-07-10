@@ -11,6 +11,9 @@ using System.Windows.Input;
 
 namespace HAcgReader.ViewModels;
 
+/// <summary>
+/// <see cref="MainWindow"/> 的视图模型
+/// </summary>
 public class MainWindowViewModel : INotifyPropertyChanged
 {
     /// <summary>
@@ -44,6 +47,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 被选中文章的下标
+    /// </summary>
     public int SelectedIndex
     {
         get => _selectedIndex;
@@ -55,6 +61,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 被选中的文章
+    /// </summary>
     public ArticleModel SelectedArticle
     {
         get => _selectedArticle;
@@ -66,6 +75,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 详情页可见性
+    /// </summary>
     public Visibility DetailPanelVisibility
     {
         get => _detailPanelVisibility;
@@ -76,6 +88,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 滚动条当前值
+    /// </summary>
     public int ProgressBarValue
     {
         get => progressBarValue;
@@ -85,6 +100,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    /// <summary>
+    /// 滚动条最大值
+    /// </summary>
     public int ProgressBarMaximum
     {
         get => progressBarMaximum;
@@ -95,11 +114,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    /// <summary>
+    /// 拉取命令
+    /// </summary>
     public ICommand FetchCommand { get; }
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    /// <summary>
+    /// 拉取完毕事件
+    /// </summary>
     public event EventHandler? FetchCompleted;
 
     /// <summary>
@@ -122,14 +147,29 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// </summary>
     private List<ArticleModel> _articles = new();
 
+    /// <summary>
+    /// 被选中文章的下标
+    /// </summary>
     private int _selectedIndex = -1;
 
+    /// <summary>
+    /// 被选中的文章
+    /// </summary>
     private ArticleModel _selectedArticle = s_emptyArticle;
 
+    /// <summary>
+    /// 详情页可见性
+    /// </summary>
     private Visibility _detailPanelVisibility = Visibility.Hidden;
 
+    /// <summary>
+    /// 滚动条当前值
+    /// </summary>
     private int progressBarValue;
 
+    /// <summary>
+    /// 滚动条最大值
+    /// </summary>
     private int progressBarMaximum = 10;
 
     /// <summary>
@@ -153,7 +193,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
         FetchCommand = new FetchCommand(this);
     }
 
-    public async void FetchAsync()
+    /// <summary>
+    /// 异步拉取文章
+    /// </summary>
+    /// <returns>当前异步操作的任务</returns>
+    public async Task FetchAsync()
     {
         if (!IsFetchingButtonEnabled)
         {
@@ -162,7 +206,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
         IsFetchingButtonEnabled = false;
 
-        var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false)).ToArray();
+        // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
+        var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false))
+            .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link))
+            .ToArray();
 
         var processed = 0;
         var total = feedArticles.Length;
@@ -172,9 +219,12 @@ public class MainWindowViewModel : INotifyPropertyChanged
         foreach (var article in feedArticles)
         {
             var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
-            _articles.Add(analyzedArticle);
-            _articles = _articles.ToList();
-            OnPropertyChanged(nameof(Articles));
+
+            // 需要创建新的 List 对象才能更新绑定
+            var newArticles = _articles.ToList();
+            newArticles.Add(analyzedArticle);
+            Articles = newArticles;
+
             processed++;
             ProgressBarValue = processed;
         }
@@ -194,10 +244,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 }
 
+/// <summary>
+/// 拉取命令
+/// </summary>
 public class FetchCommand : ICommand
 {
+    /// <summary>
+    /// 视图模型
+    /// </summary>
     private readonly MainWindowViewModel _viewModel;
 
+    /// <inheritdoc/>
     public event EventHandler? CanExecuteChanged
     {
         add
@@ -210,18 +267,27 @@ public class FetchCommand : ICommand
         }
     }
 
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="viewModel">视图模型</param>
     public FetchCommand(MainWindowViewModel viewModel)
     {
         _viewModel = viewModel;
     }
 
+    /// <inheritdoc/>
     public bool CanExecute(object? parameter)
     {
         return _viewModel.IsFetchingButtonEnabled;
     }
 
+    /// <inheritdoc/>
     public void Execute(object? parameter)
     {
-        _viewModel.FetchAsync();
+        if (CanExecute(parameter))
+        {
+            Task.Run(_viewModel.FetchAsync);
+        }
     }
 }

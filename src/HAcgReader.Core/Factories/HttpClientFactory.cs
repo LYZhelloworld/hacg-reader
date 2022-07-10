@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace HAcgReader.Factories;
+﻿namespace HAcgReader.Factories;
 
 /// <summary>
 /// HTTP 客户端工厂类

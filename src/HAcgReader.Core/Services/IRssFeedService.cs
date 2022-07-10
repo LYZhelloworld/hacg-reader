@@ -1,7 +1,4 @@
 ﻿using HAcgReader.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HAcgReader.Services;
 

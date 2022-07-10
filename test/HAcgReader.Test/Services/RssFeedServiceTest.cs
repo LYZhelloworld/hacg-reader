@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using HAcgReader.Factories;
 using HAcgReader.Models;
 using HAcgReader.Services;
 using HAcgReader.Test.TestHelpers;

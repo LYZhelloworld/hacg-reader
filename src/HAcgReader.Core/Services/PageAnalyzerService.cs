@@ -1,12 +1,7 @@
-﻿using HAcgReader.Models;
+﻿using HAcgReader.Factories;
+using HAcgReader.Models;
 using HtmlAgilityPack;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using HAcgReader.Factories;
 
 namespace HAcgReader.Services;
 

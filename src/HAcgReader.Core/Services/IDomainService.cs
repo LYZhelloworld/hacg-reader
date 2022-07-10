@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HAcgReader.Services;
+﻿namespace HAcgReader.Services;
 
 /// <summary>
 /// 提供与神社域名相关的功能

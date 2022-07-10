@@ -1,7 +1,6 @@
 ﻿using HAcgReader.Services;
 using HAcgReader.ViewModels;
 using System;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Input;
@@ -40,9 +39,14 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         DataContext = ViewModel;
-        ViewModel.FetchAsync();
+        ViewModel.FetchCommand.Execute(null);
     }
 
+    /// <summary>
+    /// 拉取完毕事件处理
+    /// </summary>
+    /// <param name="sender">事件发送者</param>
+    /// <param name="e">事件参数</param>
     private void ViewModel_FetchCompleted(object? sender, EventArgs e)
     {
         Dispatcher.Invoke(() => CommandManager.InvalidateRequerySuggested());
