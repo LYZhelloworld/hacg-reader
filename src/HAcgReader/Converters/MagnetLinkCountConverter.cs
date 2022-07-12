@@ -45,8 +45,9 @@ public class MagnetLinkCountConverter : IValueConverter
     /// <param name="parameter">参数</param>
     /// <param name="culture">当前使用的 <see cref="CultureInfo"/></param>
     /// <returns>（不使用）</returns>
+    /// <exception cref="NotImplementedException">（不使用）</exception>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return Array.Empty<string>();
+        throw new NotImplementedException();
     }
 }
