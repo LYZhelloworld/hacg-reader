@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Test", "test\HAc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Core", "src\HAcgReader.Core\HAcgReader.Core.csproj", "{CBC1F226-5284-49D7-B071-EB3E33F00F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAcgReader.Resource", "HAcgReader.Resource\HAcgReader.Resource.csproj", "{195EE50C-228C-4FFC-AC68-326B8A569524}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{195EE50C-228C-4FFC-AC68-326B8A569524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{195EE50C-228C-4FFC-AC68-326B8A569524}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{195EE50C-228C-4FFC-AC68-326B8A569524}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{195EE50C-228C-4FFC-AC68-326B8A569524}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

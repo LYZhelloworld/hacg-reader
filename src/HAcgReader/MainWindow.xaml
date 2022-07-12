@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HAcgReader"
         xmlns:c="clr-namespace:HAcgReader.Converters"
+        xmlns:r="clr-namespace:HAcgReader.Resources"
         mc:Ignorable="d"
-        Title="琉璃神社阅读器" Height="500" Width="900" x:Name="mainWindow">
+        Title="{x:Static r:Strings.Title}" d:Title="琉璃神社阅读器" Height="500" Width="900" x:Name="mainWindow">
     <Window.Resources>
         <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
     </Window.Resources>
@@ -90,7 +91,7 @@
                        FontSize="20"
                        Margin="0,0,0,3"/>
             <StackPanel DataContext="{Binding SelectedArticle}">
-                <TextBlock Text="检测到的磁力链接（单击复制）" Margin="0,0,0,3"/>
+                <TextBlock Text="{x:Static r:Strings.MagnetLinksDetected}" d:Text="检测到的磁力链接（单击复制）" Margin="0,0,0,3"/>
                 <ItemsControl ItemsSource="{Binding MagnetLinks}" d:ItemsSource="{d:SampleData ItemCount=3}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -105,14 +106,14 @@
                 <Separator/>
                 <TextBlock>
                     <TextBlock Text="{Binding Creator}" d:Text="Creator"/>
-                    发布于 <TextBlock Text="{Binding PubDate}" d:Text="2020年1月1日"/>
+                    <TextBlock Text="{Binding PubDate, StringFormat={x:Static r:Strings.PublishingDate}}" d:Text="发布于 2020年1月1日"/>
                     |
                     <Hyperlink NavigateUri="{Binding Link}" RequestNavigate="Link_RequestNavigate">
-                        阅读文章
+                        <TextBlock Text="{x:Static r:Strings.ArticleLink}" d:Text="阅读文章"/>
                     </Hyperlink>
                     |
                     <Hyperlink NavigateUri="{Binding CommentLink}" RequestNavigate="Link_RequestNavigate">
-                        <TextBlock Text="{Binding CommentCount}" d:Text="50"/> 条评论
+                        <TextBlock Text="{Binding CommentCount, StringFormat={x:Static r:Strings.CommentCount}}" d:Text="50 条评论"/>
                     </Hyperlink>
                 </TextBlock>
             </StackPanel>

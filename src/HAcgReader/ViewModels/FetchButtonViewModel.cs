@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using HAcgReader.Resources;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Windows.Input;
 
@@ -33,7 +34,7 @@ public class FetchButtonViewModel : BaseViewModel
     /// <summary>
     /// 按钮文本
     /// </summary>
-    public string ButtonText => IsEnabled ? "更多" : "正在获取信息，请稍后……";
+    public string ButtonText => IsEnabled ? Strings.FetchButtonText : Strings.FetchButtonTextDisabled;
     #endregion
 
     #region Commands

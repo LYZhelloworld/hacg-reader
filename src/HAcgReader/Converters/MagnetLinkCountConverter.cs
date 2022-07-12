@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HAcgReader.Resources;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -34,7 +35,7 @@ public class MagnetLinkCountConverter : IValueConverter
         }
 
         var magnetLinks = ((IEnumerable<string>)value).ToArray();
-        return $"{magnetLinks.Length} 个链接";
+        return string.Format(culture, Strings.MagnetLinkCount, magnetLinks.Length);
     }
 
     /// <summary>

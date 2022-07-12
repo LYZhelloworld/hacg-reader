@@ -1,6 +1,8 @@
-﻿using HAcgReader.Services;
+﻿using HAcgReader.Resources;
+using HAcgReader.Services;
 using HAcgReader.ViewModels;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
@@ -45,8 +47,8 @@ public partial class MainWindow : Window
         var domain = domainService.GetDomain();
         if (string.IsNullOrEmpty(domain))
         {
-            MessageBox.Show("找不到神社域名。请确保 acg.gy 能够正常访问。",
-                            "HAcgReader",
+            MessageBox.Show(Strings.ErrorCannotRetrieveDomain,
+                            Strings.Title,
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
             Close();
@@ -170,7 +172,7 @@ public partial class MainWindow : Window
     {
         var magnetLink = ((Hyperlink)sender).NavigateUri.AbsoluteUri;
         Clipboard.SetText(magnetLink);
-        MessageBox.Show($"已复制磁链：\n{magnetLink}", "HAcgReader", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Strings.MagnetLinkCopied, magnetLink), Strings.Title, MessageBoxButton.OK, MessageBoxImage.Information);
     }
     #endregion
 }
