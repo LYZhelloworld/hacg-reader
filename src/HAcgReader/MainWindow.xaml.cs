@@ -1,11 +1,10 @@
-﻿using HAcgReader.Services;
+﻿using HAcgReader.Resources;
+using HAcgReader.Services;
 using HAcgReader.ViewModels;
-using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace HAcgReader;
@@ -13,14 +12,16 @@ namespace HAcgReader;
 /// <summary>
 /// MainWindow.xaml 交互逻辑
 /// </summary>
-[ExcludeFromCodeCoverage]
 public partial class MainWindow : Window
 {
+    #region Fields
     /// <summary>
-    /// 模型属性
+    /// 主窗口视图模型
     /// </summary>
-    public MainWindowViewModel ViewModel { get; private set; }
+    public MainViewModel MainViewModel { get; private set; }
+    #endregion
 
+    #region Constructors
     /// <summary>
     /// 构造函数
     /// </summary>
@@ -30,31 +31,21 @@ public partial class MainWindow : Window
         var domain = domainService.GetDomain();
         if (string.IsNullOrEmpty(domain))
         {
-            MessageBox.Show("找不到神社域名。请确保 acg.gy 能够正常访问。",
-                            "HAcgReader",
+            MessageBox.Show(Strings.ErrorCannotRetrieveDomain,
+                            Strings.Title,
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
             Close();
         }
 
-        ViewModel = new MainWindowViewModel(domain);
-        ViewModel.FetchCompleted += ViewModel_FetchCompleted;
+        MainViewModel = new MainViewModel(new(domain), new(), new(), new());
 
         InitializeComponent();
-        DataContext = ViewModel;
-        ViewModel.FetchCommand.Execute(null);
+        MainViewModel.FetchButtonViewModel.Command.Execute(null);
     }
+    #endregion
 
-    /// <summary>
-    /// 拉取完毕事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ViewModel_FetchCompleted(object? sender, EventArgs e)
-    {
-        Dispatcher.Invoke(() => CommandManager.InvalidateRequerySuggested());
-    }
-
+    #region Event Handlers
     /// <summary>
     /// 文章链接、文章评论链接点击事件处理
     /// </summary>
@@ -80,6 +71,7 @@ public partial class MainWindow : Window
     {
         var magnetLink = ((Hyperlink)sender).NavigateUri.AbsoluteUri;
         Clipboard.SetText(magnetLink);
-        MessageBox.Show($"已复制磁链：\n{magnetLink}", "HAcgReader", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Strings.MagnetLinkCopied, magnetLink), Strings.Title, MessageBoxButton.OK, MessageBoxImage.Information);
     }
+    #endregion
 }

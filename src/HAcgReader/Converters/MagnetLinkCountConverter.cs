@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HAcgReader.Resources;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -34,7 +35,7 @@ public class MagnetLinkCountConverter : IValueConverter
         }
 
         var magnetLinks = ((IEnumerable<string>)value).ToArray();
-        return $"{magnetLinks.Length} 个链接";
+        return string.Format(culture, Strings.MagnetLinkCount, magnetLinks.Length);
     }
 
     /// <summary>
@@ -45,8 +46,9 @@ public class MagnetLinkCountConverter : IValueConverter
     /// <param name="parameter">参数</param>
     /// <param name="culture">当前使用的 <see cref="CultureInfo"/></param>
     /// <returns>（不使用）</returns>
+    /// <exception cref="NotImplementedException">（不使用）</exception>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return Array.Empty<string>();
+        throw new NotImplementedException();
     }
 }
