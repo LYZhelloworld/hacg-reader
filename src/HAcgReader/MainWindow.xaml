@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:HAcgReader"
         xmlns:c="clr-namespace:HAcgReader.Converters"
         xmlns:r="clr-namespace:HAcgReader.Resources"
+        xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
+        DataContext="{Binding MainViewModel, RelativeSource={RelativeSource Self}}"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="{x:Static r:Strings.Title}" d:Title="琉璃神社阅读器" Height="500" Width="900" x:Name="mainWindow">
     <Window.Resources>
@@ -29,7 +32,7 @@
                   Grid.Column="0"
                   Grid.Row="0"
                   Margin="0,0,0,2"
-                  DataContext="{Binding ArticleListViewModel, ElementName=mainWindow}"
+                  DataContext="{Binding ArticleListViewModel}"
                   ItemsSource="{Binding Articles, UpdateSourceTrigger=PropertyChanged}"
                   d:ItemsSource="{d:SampleData ItemCount=20}"
                   SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
@@ -72,7 +75,7 @@
         <Button Grid.Column="0"
                 Grid.Row="1"
                 x:Name="FetchButton"
-                DataContext="{Binding FetchButtonViewModel, ElementName=mainWindow}"
+                DataContext="{Binding FetchButtonViewModel}"
                 Command="{Binding Command}">
             <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
         </Button>
@@ -82,7 +85,7 @@
                     Grid.Column="2"
                     Grid.RowSpan="2"
                     Margin="5,0,0,0"
-                    DataContext="{Binding DetailPageViewModel, ElementName=mainWindow}"
+                    DataContext="{Binding DetailPageViewModel}"
                     Visibility="{Binding Visibility}"
                     d:Visibility="Visible">
             <TextBlock Text="{Binding SelectedArticle.Title}"
@@ -121,7 +124,7 @@
         <ProgressBar x:Name="Progress"
                      Grid.Row="1"
                      Grid.Column="2"
-                     DataContext="{Binding ProgressBarViewModel, ElementName=mainWindow}"
+                     DataContext="{Binding ProgressBarViewModel}"
                      Value="{Binding Value}"
                      Minimum="0"
                      Maximum="{Binding Maximum}"
