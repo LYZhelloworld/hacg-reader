@@ -15,7 +15,8 @@
 - 移动端 UI
 
 ## 使用的开源库
+- [coverlet.collector](https://www.nuget.org/packages/coverlet.collector)：提供单元测试覆盖率支持
 - [FluentAssertions](https://www.nuget.org/packages/FluentAssertions)：用于单元测试
 - [HtmlAgilityPack](https://www.nuget.org/packages/HtmlAgilityPack)：用于解析 HTML 文档
+- [Microsoft.Toolkit.Mvvm](https://www.nuget.org/packages/Microsoft.Toolkit.Mvvm)：用于提供 MVVM 支持
 - [Moq](https://www.nuget.org/packages/Moq)：用于单元测试
-- [coverlet.collector](https://www.nuget.org/packages/coverlet.collector)：提供单元测试覆盖率支持

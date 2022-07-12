@@ -1,5 +1,6 @@
 ﻿using HAcgReader.Models;
 using HAcgReader.Services;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -170,7 +171,12 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// <summary>
     /// 拉取命令
     /// </summary>
-    public ICommand FetchCommand { get; }
+    public ICommand FetchCommand => _fetchCommand;
+
+    /// <summary>
+    /// 拉取命令
+    /// </summary>
+    private readonly RelayCommand _fetchCommand;
 
     /// <inheritdoc/>
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -208,7 +214,8 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         _rssFeedService = rssFeedService;
         _pageAnalyzerService = pageAnalyzerService;
-        FetchCommand = new FetchCommand(this);
+
+        _fetchCommand = new RelayCommand(() => Task.Run(FetchAsync), () => IsFetchingButtonEnabled);
     }
 
     /// <summary>
@@ -223,6 +230,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
 
         IsFetchingButtonEnabled = false;
+        _fetchCommand.NotifyCanExecuteChanged();
         ProgressBarIsIndeterminate = true;
 
         // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
@@ -250,6 +258,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
 
         IsFetchingButtonEnabled = true;
+        _fetchCommand.NotifyCanExecuteChanged();
         _progressBarValue = 0;
         FetchCompleted?.Invoke(this, EventArgs.Empty);
     }
@@ -261,53 +270,5 @@ public class MainWindowViewModel : INotifyPropertyChanged
     protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new(propertyName));
-    }
-}
-
-/// <summary>
-/// 拉取命令
-/// </summary>
-public class FetchCommand : ICommand
-{
-    /// <summary>
-    /// 视图模型
-    /// </summary>
-    private readonly MainWindowViewModel _viewModel;
-
-    /// <inheritdoc/>
-    public event EventHandler? CanExecuteChanged
-    {
-        add
-        {
-            CommandManager.RequerySuggested += value;
-        }
-        remove
-        {
-            CommandManager.RequerySuggested -= value;
-        }
-    }
-
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    /// <param name="viewModel">视图模型</param>
-    public FetchCommand(MainWindowViewModel viewModel)
-    {
-        _viewModel = viewModel;
-    }
-
-    /// <inheritdoc/>
-    public bool CanExecute(object? parameter)
-    {
-        return _viewModel.IsFetchingButtonEnabled;
-    }
-
-    /// <inheritdoc/>
-    public void Execute(object? parameter)
-    {
-        if (CanExecute(parameter))
-        {
-            Task.Run(_viewModel.FetchAsync);
-        }
     }
 }
