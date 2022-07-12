@@ -44,6 +44,7 @@ public class ArticleListViewModel : BaseViewModel
             {
                 ArticleSelected?.Invoke(this, new() { SelectedArticle = _articles[SelectedIndex] });
             }
+
             OnPropertyChanged();
         }
     }
