@@ -38,10 +38,7 @@ public partial class MainWindow : Window
             Close();
         }
 
-        MainViewModel = new MainViewModel(articleListViewModel: new ArticleListViewModel(domain),
-                                          fetchButtonViewModel: new FetchButtonViewModel(),
-                                          detailPageViewModel: new DetailPageViewModel(),
-                                          progressBarViewModel: new ProgressBarViewModel());
+        MainViewModel = new MainViewModel(new(domain), new(), new(), new());
 
         InitializeComponent();
         MainViewModel.FetchButtonViewModel.Command.Execute(null);

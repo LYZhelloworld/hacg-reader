@@ -1,6 +1,7 @@
 ﻿using HAcgReader.Resources;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HAcgReader.ViewModels;
@@ -22,7 +23,6 @@ public class FetchButtonViewModel : BaseViewModel
             _isEnabled = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ButtonText));
-            _command.NotifyCanExecuteChanged();
         }
     }
 
@@ -62,7 +62,7 @@ public class FetchButtonViewModel : BaseViewModel
     /// </summary>
     public FetchButtonViewModel()
     {
-        _command = new RelayCommand(Execute, () => IsEnabled);
+        _command = new RelayCommand(Execute);
     }
     #endregion
 
