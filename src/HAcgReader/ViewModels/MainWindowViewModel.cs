@@ -35,6 +35,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// 拉取按钮是否有效
+    /// </summary>
+    private bool _isFetchingButtonEnabled = true;
+
+    /// <summary>
     /// 文章列表
     /// </summary>
     public IEnumerable<ArticleModel> Articles
@@ -46,6 +51,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    /// <summary>
+    /// 文章列表
+    /// </summary>
+    private List<ArticleModel> _articles = new();
 
     /// <summary>
     /// 被选中文章的下标
@@ -62,6 +72,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// 被选中文章的下标
+    /// </summary>
+    private int _selectedIndex = -1;
+
+    /// <summary>
     /// 被选中的文章
     /// </summary>
     public ArticleModel SelectedArticle
@@ -74,6 +89,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
             DetailPanelVisibility = value == null ? Visibility.Hidden : Visibility.Visible;
         }
     }
+
+    /// <summary>
+    /// 被选中的文章
+    /// </summary>
+    private ArticleModel _selectedArticle = s_emptyArticle;
 
     /// <summary>
     /// 详情页可见性
@@ -89,6 +109,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// 详情页可见性
+    /// </summary>
+    private Visibility _detailPanelVisibility = Visibility.Hidden;
+
+    /// <summary>
     /// 滚动条当前值
     /// </summary>
     public int ProgressBarValue
@@ -100,6 +125,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    /// <summary>
+    /// 滚动条当前值
+    /// </summary>
+    private int _progressBarValue;
 
     /// <summary>
     /// 滚动条最大值
@@ -115,6 +145,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// 滚动条最大值
+    /// </summary>
+    private int _progressBarMaximum = 10;
+
+    /// <summary>
     /// 滚动条处于不确定状态
     /// </summary>
     public bool ProgressBarIsIndeterminate
@@ -126,6 +161,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    /// <summary>
+    /// 滚动条处于不确定状态
+    /// </summary>
+    private bool _progressBarIsIndeterminate;
 
     /// <summary>
     /// 拉取命令
@@ -149,46 +189,6 @@ public class MainWindowViewModel : INotifyPropertyChanged
     /// 分析页面内容，寻找磁链
     /// </summary>
     private readonly IPageAnalyzerService _pageAnalyzerService;
-
-    /// <summary>
-    /// 是否正在拉取新的文章
-    /// </summary>
-    private bool _isFetchingButtonEnabled = true;
-
-    /// <summary>
-    /// 文章列表
-    /// </summary>
-    private List<ArticleModel> _articles = new();
-
-    /// <summary>
-    /// 被选中文章的下标
-    /// </summary>
-    private int _selectedIndex = -1;
-
-    /// <summary>
-    /// 被选中的文章
-    /// </summary>
-    private ArticleModel _selectedArticle = s_emptyArticle;
-
-    /// <summary>
-    /// 详情页可见性
-    /// </summary>
-    private Visibility _detailPanelVisibility = Visibility.Hidden;
-
-    /// <summary>
-    /// 滚动条当前值
-    /// </summary>
-    private int _progressBarValue;
-
-    /// <summary>
-    /// 滚动条最大值
-    /// </summary>
-    private int _progressBarMaximum = 10;
-
-    /// <summary>
-    /// 滚动条处于不确定状态
-    /// </summary>
-    private bool _progressBarIsIndeterminate;
 
     /// <summary>
     /// 构造函数
