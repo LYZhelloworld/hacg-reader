@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace HAcgReader.ViewModels;
 
@@ -29,6 +29,16 @@ public class MainViewModel : BaseViewModel
     /// 滚动条视图模型
     /// </summary>
     public ProgressBarViewModel ProgressBarViewModel { get; private set; }
+
+    /// <summary>
+    /// 拉取事件 <see cref="CancellationToken"/> 源
+    /// </summary>
+    private readonly CancellationTokenSource _fetchingCancellationTokenSource = new();
+
+    /// <summary>
+    /// 拉取事件
+    /// </summary>
+    private Task? _fetchingTask;
     #endregion
 
     #region Constructors
@@ -59,79 +69,54 @@ public class MainViewModel : BaseViewModel
     /// </summary>
     private void InitializeViewModelEventHandlers()
     {
-        ArticleListViewModel.ArticleSelected += ArticleListViewModel_ArticleSelected;
-        ArticleListViewModel.FetchStarted += ArticleListViewModel_FetchStarted;
-        ArticleListViewModel.RssFeedFetched += ArticleListViewModel_RssFeedFetched;
-        ArticleListViewModel.PageAnalysisCompleted += ArticleListViewModel_PageAnalysisCompleted;
-        ArticleListViewModel.FetchCompleted += ArticleListViewModel_FetchCompleted;
-        FetchButtonViewModel.Clicked += FetchButtonViewModel_Clicked;
-    }
-    #endregion
+        ArticleListViewModel.ArticleSelected += (sender, e) =>
+        {
+            DetailPageViewModel.SelectedArticle = e.SelectedArticle;
+            DetailPageViewModel.Visibility = Visibility.Visible;
+        };
+        ArticleListViewModel.FetchStarted += (sender, e) =>
+        {
+            ProgressBarViewModel.IsIndeterminate = true;
+        };
+        ArticleListViewModel.RssFeedFetched += (sender, e) =>
+        {
+            ProgressBarViewModel.IsIndeterminate = false;
+            ProgressBarViewModel.Maximum = e.Total;
+            ProgressBarViewModel.Value = 0;
+        };
+        ArticleListViewModel.PageAnalysisCompleted += (sender, e) =>
+        {
+            ProgressBarViewModel.Value = e.Progress;
+        };
+        ArticleListViewModel.FetchCompleted += (sender, e) =>
+        {
+            ProgressBarViewModel.Value = 0;
+        };
+        ArticleListViewModel.FetchCancelled += (sender, e) =>
+        {
+            ProgressBarViewModel.Value = 0;
+            ProgressBarViewModel.IsIndeterminate = false;
+        };
 
-    #region Event Handlers
-    /// <summary>
-    /// <see cref="ArticleListViewModel.ArticleSelected"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleListViewModel_ArticleSelected(object? sender, ArticleSelectedEventArgs e)
-    {
-        DetailPageViewModel.SelectedArticle = e.SelectedArticle;
-        DetailPageViewModel.Visibility = Visibility.Visible;
-    }
+        FetchButtonViewModel.Started += (sender, e) =>
+        {
+            _fetchingTask = ArticleListViewModel.FetchAsync(_fetchingCancellationTokenSource.Token);
+        };
+        FetchButtonViewModel.Cancelled += (sender, e) =>
+        {
+            FetchButtonViewModel.IsEnabled = false;
+            _fetchingCancellationTokenSource.Cancel();
+            Task.Run(async () =>
+            {
+                if (_fetchingTask != null)
+                {
+                    await _fetchingTask.ConfigureAwait(false);
+                }
 
-    /// <summary>
-    /// <see cref="ArticleListViewModel.FetchStarted"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleListViewModel_FetchStarted(object? sender, System.EventArgs e)
-    {
-        ProgressBarViewModel.IsIndeterminate = true;
-    }
-
-    /// <summary>
-    /// <see cref="ArticleListViewModel.RssFeedFetched"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleListViewModel_RssFeedFetched(object? sender, RssFeedFetchedEventArgs e)
-    {
-        ProgressBarViewModel.IsIndeterminate = false;
-        ProgressBarViewModel.Maximum = e.Total;
-        ProgressBarViewModel.Value = 0;
-    }
-
-    /// <summary>
-    /// <see cref="ArticleListViewModel.PageAnalysisCompleted"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleListViewModel_PageAnalysisCompleted(object? sender, PageAnalysisCompletedEventArgs e)
-    {
-        ProgressBarViewModel.Value = e.Progress;
-    }
-
-    /// <summary>
-    /// <see cref="ArticleListViewModel.FetchCompleted"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void ArticleListViewModel_FetchCompleted(object? sender, System.EventArgs e)
-    {
-        ProgressBarViewModel.Value = 0;
-        FetchButtonViewModel.IsEnabled = true;
-    }
-
-    /// <summary>
-    /// <see cref="FetchButtonViewModel.Clicked"/> 事件处理
-    /// </summary>
-    /// <param name="sender">事件发送者</param>
-    /// <param name="e">事件参数</param>
-    private void FetchButtonViewModel_Clicked(object? sender, System.EventArgs e)
-    {
-        FetchButtonViewModel.IsEnabled = false;
-        Task.Run(ArticleListViewModel.FetchAsync);
+                _fetchingTask = null;
+                FetchButtonViewModel.IsEnabled = true;
+            });
+        };
     }
     #endregion
 }

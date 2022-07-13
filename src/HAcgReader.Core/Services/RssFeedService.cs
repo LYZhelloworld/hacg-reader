@@ -65,7 +65,7 @@ public class RssFeedService : IRssFeedService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<ArticleModel>> FetchNextAsync()
+    public async Task<IEnumerable<ArticleModel>> FetchNextAsync(CancellationToken cancellationToken)
     {
         var uri = new UriBuilder(_path);
 
@@ -80,7 +80,7 @@ public class RssFeedService : IRssFeedService
         using var request = new HttpRequestMessage(HttpMethod.Get, uri.Uri);
         request.Headers.AcceptCharset.Add(new("utf-8"));
         using var httpClient = _httpClientFactory.Create();
-        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+        var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {

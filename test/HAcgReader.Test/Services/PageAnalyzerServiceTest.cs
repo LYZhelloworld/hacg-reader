@@ -18,7 +18,7 @@ namespace HAcgReader.Test.Services;
 public class PageAnalyzerServiceTest
 {
     /// <summary>
-    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel)"/>
+    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/>
     /// </summary>
     [TestMethod]
     public void TestAnalyzeAsync()
@@ -44,7 +44,7 @@ public class PageAnalyzerServiceTest
         {
             Link = "https://example.com/wp/00001.html",
         };
-        var newArticle = service.AnalyzeAsync(article);
+        var newArticle = service.AnalyzeAsync(article, default);
 
         article.MagnetLinks.Should().BeEquivalentTo(new string[]
         {
@@ -54,7 +54,7 @@ public class PageAnalyzerServiceTest
     }
 
     /// <summary>
-    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel)"/> 在获取不到指定标签时的情况
+    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/> 在获取不到指定标签时的情况
     /// </summary>
     [TestMethod]
     public void TestAnalyzeAsyncTagNotFound()
@@ -74,13 +74,13 @@ public class PageAnalyzerServiceTest
         {
             Link = "https://example.com/wp/00001.html",
         };
-        var newArticle = service.AnalyzeAsync(article);
+        var newArticle = service.AnalyzeAsync(article, default);
 
         article.MagnetLinks.Should().BeEquivalentTo(Array.Empty<string>());
     }
 
     /// <summary>
-    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel)"/> 在 HTTP 请求失败时的情况
+    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/> 在 HTTP 请求失败时的情况
     /// </summary>
     [TestMethod]
     public void TestAnalyzeAsyncHttpErrorResponse()
@@ -100,19 +100,19 @@ public class PageAnalyzerServiceTest
         {
             Link = "https://example.com/wp/00001.html",
         };
-        var newArticle = service.AnalyzeAsync(article);
+        var newArticle = service.AnalyzeAsync(article, default);
 
         article.MagnetLinks.Should().BeEquivalentTo(Array.Empty<string>());
     }
 
     /// <summary>
-    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel)"/> 在参数为 <c>null</c> 时的情况
+    /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/> 在参数为 <c>null</c> 时的情况
     /// </summary>
     [TestMethod]
     public void TestAnalyzeAsyncNullArgument()
     {
         var service = new PageAnalyzerService();
-        var action = () => service.AnalyzeAsync(null!);
+        var action = () => service.AnalyzeAsync(null!, default);
         action.Should().ThrowAsync<ArgumentNullException>().Wait();
     }
 }

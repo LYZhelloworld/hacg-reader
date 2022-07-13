@@ -1,7 +1,6 @@
 ﻿using HAcgReader.Resources;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HAcgReader.ViewModels;
@@ -22,7 +21,6 @@ public class FetchButtonViewModel : BaseViewModel
         {
             _isEnabled = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(ButtonText));
         }
     }
 
@@ -32,9 +30,28 @@ public class FetchButtonViewModel : BaseViewModel
     private bool _isEnabled = true;
 
     /// <summary>
+    /// 是否正在拉取
+    /// </summary>
+    public bool IsFetching
+    {
+        get => _isFetching;
+        set
+        {
+            _isFetching = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ButtonText));
+        }
+    }
+
+    /// <summary>
+    /// 是否正在拉取
+    /// </summary>
+    private bool _isFetching;
+
+    /// <summary>
     /// 按钮文本
     /// </summary>
-    public string ButtonText => IsEnabled ? Strings.FetchButtonText : Strings.FetchButtonTextDisabled;
+    public string ButtonText => IsFetching ? Strings.FetchButtonTextFetching : Strings.FetchButtonTextNotFetching;
     #endregion
 
     #region Commands
@@ -53,7 +70,12 @@ public class FetchButtonViewModel : BaseViewModel
     /// <summary>
     /// 按钮点击事件
     /// </summary>
-    public event EventHandler? Clicked;
+    public event EventHandler? Started;
+
+    /// <summary>
+    /// 按钮取消事件
+    /// </summary>
+    public event EventHandler? Cancelled;
     #endregion
 
     #region Constructors
@@ -74,7 +96,16 @@ public class FetchButtonViewModel : BaseViewModel
     {
         if (IsEnabled)
         {
-            Clicked?.Invoke(this, EventArgs.Empty);
+            if (IsFetching)
+            {
+                Cancelled?.Invoke(this, EventArgs.Empty);
+                IsFetching = false;
+            }
+            else
+            {
+                IsFetching = true;
+                Started?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
     #endregion

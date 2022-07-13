@@ -3,6 +3,7 @@ using HAcgReader.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HAcgReader.ViewModels;
@@ -80,6 +81,11 @@ public class ArticleListViewModel : BaseViewModel
     /// 拉取完毕事件
     /// </summary>
     public event EventHandler? FetchCompleted;
+
+    /// <summary>
+    /// 拉取取消事件
+    /// </summary>
+    public event EventHandler? FetchCancelled;
     #endregion
 
     #region Fields
@@ -121,15 +127,28 @@ public class ArticleListViewModel : BaseViewModel
     /// <summary>
     /// 异步拉取文章
     /// </summary>
+    /// <param name="cancellationToken">取消任务</param>
     /// <returns>当前异步操作的任务</returns>
-    public async Task FetchAsync()
+    public async Task FetchAsync(CancellationToken cancellationToken)
     {
         FetchStarted?.Invoke(this, EventArgs.Empty);
 
+        if (cancellationToken.IsCancellationRequested)
+        {
+            FetchCancelled?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
         // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
-        var feedArticles = (await _rssFeedService.FetchNextAsync().ConfigureAwait(false))
+        var feedArticles = (await _rssFeedService.FetchNextAsync(cancellationToken).ConfigureAwait(false))
             .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link))
             .ToArray();
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            FetchCancelled?.Invoke(this, EventArgs.Empty);
+            return;
+        }
 
         var processed = 0;
         var total = feedArticles.Length;
@@ -137,7 +156,19 @@ public class ArticleListViewModel : BaseViewModel
 
         foreach (var article in feedArticles)
         {
-            var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article).ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                FetchCancelled?.Invoke(this, EventArgs.Empty);
+                return;
+            }
+
+            var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article, cancellationToken).ConfigureAwait(false);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                FetchCancelled?.Invoke(this, EventArgs.Empty);
+                return;
+            }
 
             // 需要创建新的 List 对象才能更新绑定
             var newArticles = _articles.ToList();

@@ -43,7 +43,7 @@ public class PageAnalyzerService : IPageAnalyzerService
     }
 
     /// <inheritdoc/>
-    public async Task<ArticleModel> AnalyzeAsync(ArticleModel article)
+    public async Task<ArticleModel> AnalyzeAsync(ArticleModel article, CancellationToken cancellationToken)
     {
         if (article == null)
         {
@@ -53,7 +53,7 @@ public class PageAnalyzerService : IPageAnalyzerService
         using var request = new HttpRequestMessage(HttpMethod.Get, article.Link);
         request.Headers.AcceptCharset.Add(new("utf-8"));
         using var httpClient = _httpClientFactory.Create();
-        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+        var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {

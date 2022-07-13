@@ -36,7 +36,7 @@ public class RssFeedServiceTest
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/>
+    /// 测试 <see cref="RssFeedService.FetchNextAsync(CancellationToken)"/>
     /// </summary>
     [TestMethod]
     public void TestFetchNextAsync()
@@ -63,7 +63,7 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
+        var pages = service.FetchNextAsync(default);
         pages.Result.Should().BeEquivalentTo(new ArticleModel[]
         {
             new()
@@ -89,12 +89,12 @@ public class RssFeedServiceTest
         });
 
         // 下一页应为空
-        pages = service.FetchNextAsync();
+        pages = service.FetchNextAsync(default);
         pages.Result.Should().BeEmpty();
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在根标签或者 <c>&lt;channel&gt;</c> 标签丢失时的情况
+    /// 测试 <see cref="RssFeedService.FetchNextAsync(CancellationToken)"/> 在根标签或者 <c>&lt;channel&gt;</c> 标签丢失时的情况
     /// </summary>
     /// <param name="content">测试 XML 的内容</param>
     [DataTestMethod]
@@ -113,12 +113,12 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
+        var pages = service.FetchNextAsync(default);
         pages.Result.Should().BeEquivalentTo(Array.Empty<ArticleModel>());
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
+    /// 测试 <see cref="RssFeedService.FetchNextAsync(CancellationToken)"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
     /// </summary>
     [TestMethod]
     public void TestFetchNextAsyncEmptyTagsInItem()
@@ -134,7 +134,7 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
+        var pages = service.FetchNextAsync(default);
         pages.Result.Should().BeEquivalentTo(new ArticleModel[] { new() });
     }
 }
