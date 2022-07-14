@@ -6,6 +6,21 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <AnalysisLevel>latest-all</AnalysisLevel>
+    <IsPublishable>False</IsPublishable>
+    <Company>LYZhelloworld</Company>
+    <Copyright>Licensed under the MIT license.</Copyright>
+    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +41,13 @@
 
   <ItemGroup>
     <None Remove="TestData\TestPage.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
