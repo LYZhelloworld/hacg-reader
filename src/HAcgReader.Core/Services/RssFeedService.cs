@@ -65,7 +65,7 @@ public class RssFeedService : IRssFeedService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<ArticleModel>> FetchNextAsync(CancellationToken cancellationToken)
+    public IEnumerable<ArticleModel> FetchNext(CancellationToken cancellationToken)
     {
         var uri = new UriBuilder(_path);
 
@@ -80,7 +80,7 @@ public class RssFeedService : IRssFeedService
         using var request = new HttpRequestMessage(HttpMethod.Get, uri.Uri);
         request.Headers.AcceptCharset.Add(new("utf-8"));
         using var httpClient = _httpClientFactory.Create();
-        var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = httpClient.Send(request, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -88,7 +88,7 @@ public class RssFeedService : IRssFeedService
             return Array.Empty<ArticleModel>();
         }
 
-        var result = Parse(await response.Content!.ReadAsStreamAsync(default).ConfigureAwait(false));
+        var result = Parse(response.Content!.ReadAsStream(default));
         _page++;
         return result;
     }

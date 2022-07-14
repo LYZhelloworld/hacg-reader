@@ -125,11 +125,10 @@ public class ArticleListViewModel : BaseViewModel
 
     #region Methods
     /// <summary>
-    /// 异步拉取文章
+    /// 拉取文章
     /// </summary>
     /// <param name="cancellationToken">取消任务</param>
-    /// <returns>当前异步操作的任务</returns>
-    public async Task FetchAsync(CancellationToken cancellationToken)
+    public void Fetch(CancellationToken cancellationToken)
     {
         FetchStarted?.Invoke(this, EventArgs.Empty);
 
@@ -140,7 +139,7 @@ public class ArticleListViewModel : BaseViewModel
         }
 
         // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
-        var feedArticles = (await _rssFeedService.FetchNextAsync(cancellationToken).ConfigureAwait(false))
+        var feedArticles = _rssFeedService.FetchNext(cancellationToken)
             .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link))
             .ToArray();
 
@@ -162,7 +161,7 @@ public class ArticleListViewModel : BaseViewModel
                 return;
             }
 
-            var analyzedArticle = await _pageAnalyzerService.AnalyzeAsync(article, cancellationToken).ConfigureAwait(false);
+            var analyzedArticle = _pageAnalyzerService.Analyze(article, cancellationToken);
 
             if (cancellationToken.IsCancellationRequested)
             {

@@ -100,19 +100,15 @@ public class MainViewModel : BaseViewModel
 
         FetchButtonViewModel.Started += (sender, e) =>
         {
-            _fetchingTask = ArticleListViewModel.FetchAsync(_fetchingCancellationTokenSource.Token);
+            _fetchingTask = Task.Run(() => ArticleListViewModel.Fetch(_fetchingCancellationTokenSource.Token));
         };
         FetchButtonViewModel.Cancelled += (sender, e) =>
         {
             FetchButtonViewModel.IsEnabled = false;
             _fetchingCancellationTokenSource.Cancel();
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                if (_fetchingTask != null)
-                {
-                    await _fetchingTask.ConfigureAwait(false);
-                }
-
+                _fetchingTask?.Wait();
                 _fetchingTask = null;
                 FetchButtonViewModel.IsEnabled = true;
             });
