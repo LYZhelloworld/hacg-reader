@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+    - '**.cs'
+    - '**.csproj'
+
+env:
+  DOTNET_VERSION: '6.0'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    name: build
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
+    
+    - name: Test
+      run: dotnet test --configuration ${{ matrix.configuration }} --no-restore --verbosity normal
