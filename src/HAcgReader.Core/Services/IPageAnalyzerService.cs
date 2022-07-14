@@ -11,7 +11,7 @@ public interface IPageAnalyzerService
     /// 分析页面内容
     /// </summary>
     /// <param name="article">要分析的文章</param>
-    /// <param name="cancellationToken">取消任务</param>
+    /// <param name="cancellationToken">取消令牌</param>
     /// <returns>分析结果</returns>
     /// <exception cref="ArgumentNullException"><paramref name="article"/> 为 <c>null</c> 时抛出</exception>
     /// <exception cref="TaskCanceledException">在任务取消时抛出</exception>

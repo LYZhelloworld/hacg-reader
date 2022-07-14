@@ -91,6 +91,8 @@ public class MainViewModel : BaseViewModel
         ArticleListViewModel.FetchCompleted += (sender, e) =>
         {
             ProgressBarViewModel.Value = 0;
+            FetchButtonViewModel.IsFetching = false;
+
             _fetchingCancellationTokenSource?.Dispose();
             _fetchingCancellationTokenSource = null;
             _fetchingTask = null;

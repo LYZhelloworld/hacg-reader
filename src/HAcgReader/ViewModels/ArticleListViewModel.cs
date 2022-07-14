@@ -98,6 +98,11 @@ public class ArticleListViewModel : BaseViewModel
     /// 分析页面内容，寻找磁链
     /// </summary>
     private readonly IPageAnalyzerService _pageAnalyzerService;
+
+    /// <summary>
+    /// 未分析文章的缓存
+    /// </summary>
+    private readonly List<ArticleModel> _articleCache = new();
     #endregion
 
     #region Constructors
@@ -125,9 +130,9 @@ public class ArticleListViewModel : BaseViewModel
 
     #region Methods
     /// <summary>
-    /// 拉取文章
+    /// 拉取并分析文章
     /// </summary>
-    /// <param name="cancellationToken">取消任务</param>
+    /// <param name="cancellationToken">取消令牌</param>
     public void Fetch(CancellationToken cancellationToken)
     {
         FetchStarted?.Invoke(this, EventArgs.Empty);
@@ -145,23 +150,28 @@ public class ArticleListViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// 拉取文章
+    /// 拉取并分析文章
     /// </summary>
-    /// <param name="cancellationToken">取消任务</param>
+    /// <param name="cancellationToken">取消令牌</param>
     /// <exception cref="TaskCanceledException">在任务取消时抛出</exception>
     private void FetchInternal(CancellationToken cancellationToken)
     {
-        // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
-        var feedArticles = _rssFeedService.FetchNext(cancellationToken)
-            .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link))
-            .ToArray();
+        // 如果未分析完毕的文章缓存为空则拉取新文章，否则继续处理
+        if (_articleCache.Count == 0)
+        {
+            // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
+            var fetchedArticles = _rssFeedService.FetchNext(cancellationToken)
+                .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link));
+            _articleCache.AddRange(fetchedArticles);
+        }
 
         var processed = 0;
-        var total = feedArticles.Length;
+        var total = _articleCache.Count;
         RssFeedFetched?.Invoke(this, new() { Total = total });
 
-        foreach (var article in feedArticles)
+        while (_articleCache.Count > 0)
         {
+            var article = _articleCache[0];
             var analyzedArticle = _pageAnalyzerService.Analyze(article, cancellationToken);
 
             // 需要创建新的 List 对象才能更新绑定
@@ -169,6 +179,7 @@ public class ArticleListViewModel : BaseViewModel
             newArticles.Add(analyzedArticle);
             Articles = newArticles;
 
+            _articleCache.RemoveAt(0);
             processed++;
             PageAnalysisCompleted?.Invoke(this, new() { Progress = processed });
         }
