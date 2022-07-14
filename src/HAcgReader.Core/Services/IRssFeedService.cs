@@ -8,8 +8,10 @@ namespace HAcgReader.Services;
 public interface IRssFeedService
 {
     /// <summary>
-    /// 异步获取下一页 RSS Feed 内容
+    /// 获取下一页 RSS Feed 内容
     /// </summary>
-    /// <returns>异步获取的下一页内容</returns>
-    Task<IEnumerable<ArticleModel>> FetchNextAsync();
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>获取的下一页内容</returns>
+    /// <exception cref="TaskCanceledException">在任务取消时抛出</exception>
+    IEnumerable<ArticleModel> FetchNext(CancellationToken cancellationToken);
 }

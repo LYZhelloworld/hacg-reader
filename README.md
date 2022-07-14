@@ -14,8 +14,7 @@
 - 应用程序配置（用于在解析不到域名时手动提供）
 - 移动端 UI
 
-## 使用的开源库
-- [coverlet.collector](https://www.nuget.org/packages/coverlet.collector)：提供单元测试覆盖率支持
+## 使用的开源库（部分）
 - [FluentAssertions](https://www.nuget.org/packages/FluentAssertions)：用于单元测试
 - [HtmlAgilityPack](https://www.nuget.org/packages/HtmlAgilityPack)：用于解析 HTML 文档
 - [Microsoft.Toolkit.Mvvm](https://www.nuget.org/packages/Microsoft.Toolkit.Mvvm)：用于提供 MVVM 支持

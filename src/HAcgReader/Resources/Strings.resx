@@ -129,11 +129,11 @@
   <data name="ErrorCannotRetrieveDomain" xml:space="preserve">
     <value>找不到神社域名。请确保 acg.gy 能够正常访问。</value>
   </data>
-  <data name="FetchButtonText" xml:space="preserve">
-    <value>更多</value>
+  <data name="FetchButtonTextFetching" xml:space="preserve">
+    <value>正在获取信息，点击取消……</value>
   </data>
-  <data name="FetchButtonTextDisabled" xml:space="preserve">
-    <value>正在获取信息，请稍后……</value>
+  <data name="FetchButtonTextNotFetching" xml:space="preserve">
+    <value>更多</value>
   </data>
   <data name="MagnetLinkCopied" xml:space="preserve">
     <value>已复制磁链：

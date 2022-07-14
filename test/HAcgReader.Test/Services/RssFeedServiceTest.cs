@@ -36,10 +36,10 @@ public class RssFeedServiceTest
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/>
+    /// 测试 <see cref="RssFeedService.FetchNext(CancellationToken)"/>
     /// </summary>
     [TestMethod]
-    public void TestFetchNextAsync()
+    public void TestFetchNext()
     {
         var xmlLocation = Path.Combine(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
@@ -63,8 +63,8 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
-        pages.Result.Should().BeEquivalentTo(new ArticleModel[]
+        var pages = service.FetchNext(default);
+        pages.Should().BeEquivalentTo(new ArticleModel[]
         {
             new()
             {
@@ -89,18 +89,18 @@ public class RssFeedServiceTest
         });
 
         // 下一页应为空
-        pages = service.FetchNextAsync();
-        pages.Result.Should().BeEmpty();
+        pages = service.FetchNext(default);
+        pages.Should().BeEmpty();
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在根标签或者 <c>&lt;channel&gt;</c> 标签丢失时的情况
+    /// 测试 <see cref="RssFeedService.FetchNext(CancellationToken)"/> 在根标签或者 <c>&lt;channel&gt;</c> 标签丢失时的情况
     /// </summary>
     /// <param name="content">测试 XML 的内容</param>
     [DataTestMethod]
     [DataRow("")]
     [DataRow(@"<rss/>")]
-    public void TestFetchNextAsyncEmptyTags(string content)
+    public void TestFetchNextEmptyTags(string content)
     {
         using var httpResponse = new HttpResponseMessage()
         {
@@ -113,12 +113,12 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
-        pages.Result.Should().BeEquivalentTo(Array.Empty<ArticleModel>());
+        var pages = service.FetchNext(default);
+        pages.Should().BeEquivalentTo(Array.Empty<ArticleModel>());
     }
 
     /// <summary>
-    /// 测试 <see cref="RssFeedService.FetchNextAsync"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
+    /// 测试 <see cref="RssFeedService.FetchNextAsync(CancellationToken)"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
     /// </summary>
     [TestMethod]
     public void TestFetchNextAsyncEmptyTagsInItem()
@@ -134,7 +134,7 @@ public class RssFeedServiceTest
 
         var service = new RssFeedService("example.com", handler.GetHttpClientFactory());
 
-        var pages = service.FetchNextAsync();
-        pages.Result.Should().BeEquivalentTo(new ArticleModel[] { new() });
+        var pages = service.FetchNext(default);
+        pages.Should().BeEquivalentTo(new ArticleModel[] { new() });
     }
 }

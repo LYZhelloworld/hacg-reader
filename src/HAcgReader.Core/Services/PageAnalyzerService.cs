@@ -43,7 +43,7 @@ public class PageAnalyzerService : IPageAnalyzerService
     }
 
     /// <inheritdoc/>
-    public async Task<ArticleModel> AnalyzeAsync(ArticleModel article)
+    public ArticleModel Analyze(ArticleModel article, CancellationToken cancellationToken)
     {
         if (article == null)
         {
@@ -53,7 +53,7 @@ public class PageAnalyzerService : IPageAnalyzerService
         using var request = new HttpRequestMessage(HttpMethod.Get, article.Link);
         request.Headers.AcceptCharset.Add(new("utf-8"));
         using var httpClient = _httpClientFactory.Create();
-        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+        var response = httpClient.Send(request, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -61,7 +61,7 @@ public class PageAnalyzerService : IPageAnalyzerService
             return article;
         }
 
-        article.MagnetLinks = Parse(await response.Content!.ReadAsStringAsync(default).ConfigureAwait(false));
+        article.MagnetLinks = Parse(response.Content!.ReadAsStream(default));
         return article;
     }
 
@@ -70,10 +70,10 @@ public class PageAnalyzerService : IPageAnalyzerService
     /// </summary>
     /// <param name="content">返回内容</param>
     /// <returns>解析出的磁链集合</returns>
-    private static IEnumerable<string> Parse(string content)
+    private static IEnumerable<string> Parse(Stream content)
     {
         var doc = new HtmlDocument();
-        doc.LoadHtml(content);
+        doc.Load(content);
 
         // 寻找 <div class="entry-content">
         var entryContentTags = doc.DocumentNode.SelectNodes("//div[@class=\"entry-content\"]");

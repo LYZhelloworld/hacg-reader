@@ -35,7 +35,7 @@ public partial class MainWindow : Window
                             Strings.Title,
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
-            Close();
+            Application.Current.Shutdown();
         }
 
         MainViewModel = new MainViewModel(new(domain), new(), new(), new());
