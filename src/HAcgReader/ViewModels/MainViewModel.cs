@@ -33,7 +33,7 @@ public class MainViewModel : BaseViewModel
     /// <summary>
     /// 拉取事件 <see cref="CancellationToken"/> 源
     /// </summary>
-    private readonly CancellationTokenSource _fetchingCancellationTokenSource = new();
+    private CancellationTokenSource? _fetchingCancellationTokenSource;
 
     /// <summary>
     /// 拉取事件
@@ -91,6 +91,9 @@ public class MainViewModel : BaseViewModel
         ArticleListViewModel.FetchCompleted += (sender, e) =>
         {
             ProgressBarViewModel.Value = 0;
+            _fetchingCancellationTokenSource?.Dispose();
+            _fetchingCancellationTokenSource = null;
+            _fetchingTask = null;
         };
         ArticleListViewModel.FetchCancelled += (sender, e) =>
         {
@@ -100,12 +103,14 @@ public class MainViewModel : BaseViewModel
 
         FetchButtonViewModel.Started += (sender, e) =>
         {
+            _fetchingCancellationTokenSource = new();
             _fetchingTask = Task.Run(() => ArticleListViewModel.Fetch(_fetchingCancellationTokenSource.Token));
         };
         FetchButtonViewModel.Cancelled += (sender, e) =>
         {
             FetchButtonViewModel.IsEnabled = false;
-            _fetchingCancellationTokenSource.Cancel();
+            _fetchingCancellationTokenSource?.Cancel();
+            _fetchingCancellationTokenSource?.Dispose();
             Task.Run(() =>
             {
                 _fetchingTask?.Wait();

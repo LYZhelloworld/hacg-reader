@@ -132,22 +132,29 @@ public class ArticleListViewModel : BaseViewModel
     {
         FetchStarted?.Invoke(this, EventArgs.Empty);
 
-        if (cancellationToken.IsCancellationRequested)
+        try
+        {
+            FetchInternal(cancellationToken);
+        }
+        catch (TaskCanceledException)
         {
             FetchCancelled?.Invoke(this, EventArgs.Empty);
-            return;
         }
 
+        FetchCompleted?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// 拉取文章
+    /// </summary>
+    /// <param name="cancellationToken">取消任务</param>
+    /// <exception cref="TaskCanceledException">在任务取消时抛出</exception>
+    private void FetchInternal(CancellationToken cancellationToken)
+    {
         // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
         var feedArticles = _rssFeedService.FetchNext(cancellationToken)
             .Where(newArticle => !_articles.Exists(article => article.Link == newArticle.Link))
             .ToArray();
-
-        if (cancellationToken.IsCancellationRequested)
-        {
-            FetchCancelled?.Invoke(this, EventArgs.Empty);
-            return;
-        }
 
         var processed = 0;
         var total = feedArticles.Length;
@@ -155,19 +162,7 @@ public class ArticleListViewModel : BaseViewModel
 
         foreach (var article in feedArticles)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                FetchCancelled?.Invoke(this, EventArgs.Empty);
-                return;
-            }
-
             var analyzedArticle = _pageAnalyzerService.Analyze(article, cancellationToken);
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                FetchCancelled?.Invoke(this, EventArgs.Empty);
-                return;
-            }
 
             // 需要创建新的 List 对象才能更新绑定
             var newArticles = _articles.ToList();
@@ -177,8 +172,6 @@ public class ArticleListViewModel : BaseViewModel
             processed++;
             PageAnalysisCompleted?.Invoke(this, new() { Progress = processed });
         }
-
-        FetchCompleted?.Invoke(this, EventArgs.Empty);
     }
     #endregion
 }
