@@ -1,20 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
     <AnalysisLevel>latest-all</AnalysisLevel>
-    <NeutralLanguage>zh-CN</NeutralLanguage>
-    <StartupObject>HAcgReader.App</StartupObject>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Company>LYZhelloworld</Company>
     <Copyright>Licensed under the MIT license.</Copyright>
+    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.0.4</Version>
-    <Company>LYZhelloworld</Company>
-    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -33,12 +29,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="VocaDb.ResXFileCodeGenerator" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HAcgReader.Core\HAcgReader.Core.csproj" />
-    <ProjectReference Include="..\HAcgReader.Resources\HAcgReader.Resources.csproj" />
+    <EmbeddedResource Update="Strings.resx">
+    </EmbeddedResource>
   </ItemGroup>
+
+  <PropertyGroup>
+    <ResXFileCodeGenerator_PublicClass>true</ResXFileCodeGenerator_PublicClass>
+    <ResXFileCodeGenerator_NullForgivingOperators>true</ResXFileCodeGenerator_NullForgivingOperators>
+  </PropertyGroup>
 
 </Project>

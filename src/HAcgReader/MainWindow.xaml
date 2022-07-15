@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HAcgReader"
         xmlns:c="clr-namespace:HAcgReader.Converters"
-        xmlns:r="clr-namespace:HAcgReader.Resources"
+        xmlns:r="clr-namespace:HAcgReader.Resources;assembly=HAcgReader.Resources"
         xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
         DataContext="{Binding MainViewModel, RelativeSource={RelativeSource Self}}"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
