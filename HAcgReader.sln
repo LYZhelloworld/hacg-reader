@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Core", "src\HAcg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Resources", "src\HAcgReader.Resources\HAcgReader.Resources.csproj", "{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BE33268B-9045-4721-BFAB-34AAA29B9B60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0183067B-6545-4A40-8836-48E86EDD0995}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5AAB8C65-4271-4F4B-8F7A-B73B94AD5157} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
+		{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8} = {0183067B-6545-4A40-8836-48E86EDD0995}
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9439EC8A-B1C6-4748-AFB4-B1EAF2EDCED9}
