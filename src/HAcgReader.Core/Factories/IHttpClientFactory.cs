@@ -13,7 +13,15 @@ namespace HAcgReader.Core.Factories
         /// <summary>
         /// 创造 <see cref="HttpClient"/> 实例
         /// </summary>
+        /// <param name="handler">HTTP 客户端处理器，为 <see langword="null"/> 时表示不使用</param>
         /// <returns><see cref="HttpClient"/> 对象</returns>
-        HttpClient Create();
+        HttpClient Create(HttpClientHandler? handler = null);
+
+        /// <summary>
+        /// 创造 <see cref="HttpClientHandler"/> 实例
+        /// </summary>
+        /// <param name="useProxy">是否使用代理</param>
+        /// <returns><see cref="HttpClientHandler"/> 对象</returns>
+        HttpClientHandler CreateHandler(bool useProxy = true);
     }
 }

@@ -83,8 +83,8 @@ namespace HAcgReader.Core.Services
             }
 
             using var request = new HttpRequestMessage(HttpMethod.Get, uri.Uri);
-            request.Headers.AcceptCharset.Add(new("utf-8"));
-            using var httpClient = this.httpClientFactory.Create();
+            using var handler = this.httpClientFactory.CreateHandler();
+            using var httpClient = this.httpClientFactory.Create(handler);
             var response = httpClient.Send(request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)

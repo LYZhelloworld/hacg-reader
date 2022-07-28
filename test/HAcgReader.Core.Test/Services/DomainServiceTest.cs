@@ -56,7 +56,7 @@ namespace HAcgReader.Core.Test.Services
             };
 
             var handler = new Mock<HttpMessageHandler>();
-            handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://acg.gy"), httpResponse);
+            handler.SetupHttpResponse(HttpMethod.Get, new Uri("http://acg.gy"), httpResponse);
 
             var service = new DomainService(handler.GetHttpClientFactory());
 
