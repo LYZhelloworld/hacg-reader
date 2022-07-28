@@ -16,7 +16,7 @@ namespace HAcgReader.Core.Services
         /// <summary>
         /// 用于发布神社新域名的网站
         /// </summary>
-        private const string DomainPublisherUrl = "https://acg.gy/";
+        private const string DomainPublisherUrl = "http://acg.gy/";
 
         /// <summary>
         /// 网页中链接的正则表达式
@@ -49,9 +49,9 @@ namespace HAcgReader.Core.Services
         public string GetDomain()
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(DomainPublisherUrl));
-            request.Headers.AcceptCharset.Add(new("utf-8"));
 
-            using var httpClient = this.httpClientFactory.Create();
+            using var handler = this.httpClientFactory.CreateHandler();
+            using var httpClient = this.httpClientFactory.Create(handler);
             var response = httpClient.Send(request);
             if (!response.IsSuccessStatusCode)
             {

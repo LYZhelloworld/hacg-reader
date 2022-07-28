@@ -26,6 +26,10 @@ namespace HAcgReader.Core.Test.Factories
             var factory = new HttpClientFactory();
             using var httpClient = factory.Create();
             httpClient.Should().NotBeNull();
+
+            using var handler = factory.CreateHandler();
+            using var httpClient2 = factory.Create(handler);
+            httpClient2.Should().NotBeNull();
         }
     }
 }

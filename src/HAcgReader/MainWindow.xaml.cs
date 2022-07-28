@@ -5,6 +5,7 @@
 
 namespace HAcgReader
 {
+    using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.Windows;
@@ -33,7 +34,7 @@ namespace HAcgReader
                     Strings.Title,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                Application.Current.Shutdown();
+                Environment.Exit(-1);
             }
 
             this.MainViewModel = new MainViewModel(new(domain), new(), new(), new());

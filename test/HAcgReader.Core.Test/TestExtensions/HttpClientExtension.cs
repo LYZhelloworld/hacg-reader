@@ -51,7 +51,7 @@ namespace HAcgReader.Core.Test.TestExtensions
         public static IHttpClientFactory GetHttpClientFactory(this Mock<HttpMessageHandler> mock)
         {
             var httpClientFactory = new Mock<IHttpClientFactory>();
-            httpClientFactory.Setup(x => x.Create()).Returns(() => new HttpClient(mock.Object));
+            httpClientFactory.Setup(x => x.Create(It.IsAny<HttpClientHandler?>())).Returns(() => new HttpClient(mock.Object));
             return httpClientFactory.Object;
         }
     }
