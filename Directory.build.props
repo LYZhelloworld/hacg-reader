@@ -12,29 +12,27 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="$(SolutionDir)\README.md">
+    <None Include="$(SolutionDir)README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="$(SolutionDir)\LICENSE">
+    <None Include="$(SolutionDir)LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="$(SolutionDir)\shared\.editorconfig">
+    <None Include="$(SolutionDir)shared\.editorconfig">
       <Pack>False</Pack>
     </None>
-    <AdditionalFiles Include="$(SolutionDir)\shared\stylecop.json">
-      <Pack>False</Pack>
-    </AdditionalFiles>
   </ItemGroup>
 
   <Choose>
     <When Condition="'$(MSBuildProjectName)' != 'HAcgReader.Resources'">
       <PropertyGroup>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
       </PropertyGroup>
       <ItemGroup>
+        <AdditionalFiles Include="$(SolutionDir)shared\stylecop.json"/>
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
