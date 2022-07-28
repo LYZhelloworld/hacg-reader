@@ -1,57 +1,66 @@
-﻿using FluentAssertions;
-using HAcgReader.Services;
-using HAcgReader.Test.TestHelpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Reflection;
+﻿// <copyright file="DomainServiceTest.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-namespace HAcgReader.Test.Services;
-
-/// <summary>
-/// 测试 <see cref="DomainService"/>
-/// </summary>
-[TestClass]
-[ExcludeFromCodeCoverage]
-public class DomainServiceTest
+namespace HAcgReader.Test.Services
 {
-    /// <summary>
-    /// 测试 <see cref="DomainService.DomainService"/>
-    /// </summary>
-    [TestMethod]
-    public void TestConstructor()
-    {
-        var service = new DomainService();
-        service.Should().NotBeNull();
-    }
+    using System.Diagnostics.CodeAnalysis;
+    using System.Net;
+    using System.Reflection;
+    using FluentAssertions;
+    using HAcgReader.Services;
+    using HAcgReader.Test.TestHelpers;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
 
     /// <summary>
-    /// 测试 <see cref="DomainService.GetDomain"/>
+    /// 测试 <see cref="DomainService"/>
     /// </summary>
-    [DataTestMethod]
-    [DataRow(HttpStatusCode.OK, true, "example.com")]
-    [DataRow(HttpStatusCode.NotFound, true, "")]
-    [DataRow(HttpStatusCode.OK, false, "")]
-    public void TestGetDomain(HttpStatusCode statusCode, bool useSampleResponse, string expected)
+    [TestClass]
+    [ExcludeFromCodeCoverage]
+    public class DomainServiceTest
     {
-        var htmlLocation = Path.Combine(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-            "TestData",
-            "TestDomainServicePage.html");
-        var htmlContent = File.ReadAllBytes(htmlLocation);
-
-        using var httpResponse = new HttpResponseMessage
+        /// <summary>
+        /// 测试 <see cref="DomainService.DomainService"/>
+        /// </summary>
+        [TestMethod]
+        public void TestConstructor()
         {
-            StatusCode = statusCode,
-            Content = new ByteArrayContent(useSampleResponse ? htmlContent : Array.Empty<byte>())
-        };
+            var service = new DomainService();
+            service.Should().NotBeNull();
+        }
 
-        var handler = new Mock<HttpMessageHandler>();
-        handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://acg.gy"), httpResponse);
+        /// <summary>
+        /// 测试 <see cref="DomainService.GetDomain"/>
+        /// </summary>
+        /// <param name="statusCode">状态码</param>
+        /// <param name="useSampleResponse">是否使用样例应答</param>
+        /// <param name="expected">期待的结果</param>
+        [DataTestMethod]
+        [DataRow(HttpStatusCode.OK, true, "example.com")]
+        [DataRow(HttpStatusCode.NotFound, true, "")]
+        [DataRow(HttpStatusCode.OK, false, "")]
+        public void TestGetDomain(HttpStatusCode statusCode, bool useSampleResponse, string expected)
+        {
+            var htmlLocation = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+                "TestData",
+                "TestDomainServicePage.html");
+            var htmlContent = File.ReadAllBytes(htmlLocation);
 
-        var service = new DomainService(handler.GetHttpClientFactory());
+            using var httpResponse = new HttpResponseMessage
+            {
+                StatusCode = statusCode,
+                Content = new ByteArrayContent(useSampleResponse ? htmlContent : Array.Empty<byte>()),
+            };
 
-        service.GetDomain().Should().Be(expected);
+            var handler = new Mock<HttpMessageHandler>();
+            handler.SetupHttpResponse(HttpMethod.Get, new Uri("https://acg.gy"), httpResponse);
+
+            var service = new DomainService(handler.GetHttpClientFactory());
+
+            service.GetDomain().Should().Be(expected);
+        }
     }
 }

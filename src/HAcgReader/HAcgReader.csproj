@@ -8,13 +8,6 @@
     <AnalysisLevel>latest-all</AnalysisLevel>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <StartupObject>HAcgReader.App</StartupObject>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Copyright>Licensed under the MIT license.</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.0.4</Version>
-    <Company>LYZhelloworld</Company>
-    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,20 +17,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\.editorconfig">
-      <Pack>False</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />

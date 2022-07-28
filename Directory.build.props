@@ -1,0 +1,35 @@
+<Project>
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Licensed under the MIT license.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Version>0.0.4</Version>
+    <Company>Helloworld</Company>
+    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="$(SolutionDir)\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="$(SolutionDir)\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="$(SolutionDir)\shared\.editorconfig">
+      <Pack>False</Pack>
+    </None>
+    <AdditionalFiles Include="$(SolutionDir)\shared\stylecop.json">
+      <Pack>False</Pack>
+    </AdditionalFiles>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

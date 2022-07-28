@@ -7,12 +7,6 @@
     <IsPackable>false</IsPackable>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <IsPublishable>False</IsPublishable>
-    <Company>LYZhelloworld</Company>
-    <Copyright>Licensed under the MIT license.</Copyright>
-    <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -41,20 +35,6 @@
 
   <ItemGroup>
     <None Remove="TestData\TestPage.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\.editorconfig">
-      <Pack>False</Pack>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

@@ -30,9 +30,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\.editorconfig">
-      <Pack>False</Pack>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

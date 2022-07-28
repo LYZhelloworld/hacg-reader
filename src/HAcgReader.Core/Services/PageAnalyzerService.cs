@@ -1,96 +1,102 @@
-﻿using HAcgReader.Factories;
-using HAcgReader.Models;
-using HtmlAgilityPack;
-using System.Text.RegularExpressions;
+﻿// <copyright file="PageAnalyzerService.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-namespace HAcgReader.Services;
-
-/// <summary>
-/// 分析页面内容，寻找磁链
-/// </summary>
-public class PageAnalyzerService : IPageAnalyzerService
+namespace HAcgReader.Services
 {
-    /// <summary>
-    /// 磁链前缀
-    /// </summary>
-    private const string MagnetPrefix = "magnet:?xt=urn:btih:";
+    using System.Text.RegularExpressions;
+    using HAcgReader.Factories;
+    using HAcgReader.Models;
+    using HtmlAgilityPack;
 
     /// <summary>
-    /// 磁链哈希的正则表达式
+    /// 分析页面内容，寻找磁链
     /// </summary>
-    private static readonly Regex s_magnetLink = new(@"(?<![0-9a-fA-F])([0-9a-fA-F]{40})(?![0-9a-fA-F])", RegexOptions.Compiled);
-
-    /// <summary>
-    /// HTTP 客户端工厂类
-    /// </summary>
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    public PageAnalyzerService()
-        : this(new HttpClientFactory())
+    public class PageAnalyzerService : IPageAnalyzerService
     {
-    }
+        /// <summary>
+        /// 磁链前缀
+        /// </summary>
+        private const string MagnetPrefix = "magnet:?xt=urn:btih:";
 
-    /// <summary>
-    /// 初始化所有依赖的构造函数
-    /// </summary>
-    /// <param name="httpClientFactory">HTTP 客户端工厂类</param>
-    public PageAnalyzerService(IHttpClientFactory httpClientFactory)
-    {
-        _httpClientFactory = httpClientFactory;
-    }
+        /// <summary>
+        /// 磁链哈希的正则表达式
+        /// </summary>
+        private static readonly Regex MagnetLink = new(@"(?<![0-9a-fA-F])([0-9a-fA-F]{40})(?![0-9a-fA-F])", RegexOptions.Compiled);
 
-    /// <inheritdoc/>
-    public ArticleModel Analyze(ArticleModel article, CancellationToken cancellationToken)
-    {
-        if (article == null)
+        /// <summary>
+        /// HTTP 客户端工厂类
+        /// </summary>
+        private readonly IHttpClientFactory httpClientFactory;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public PageAnalyzerService()
+            : this(new HttpClientFactory())
         {
-            throw new ArgumentNullException(nameof(article));
         }
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, article.Link);
-        request.Headers.AcceptCharset.Add(new("utf-8"));
-        using var httpClient = _httpClientFactory.Create();
-        var response = httpClient.Send(request, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
+        /// <summary>
+        /// 初始化所有依赖的构造函数
+        /// </summary>
+        /// <param name="httpClientFactory">HTTP 客户端工厂类</param>
+        public PageAnalyzerService(IHttpClientFactory httpClientFactory)
         {
-            // 无法解析
+            this.httpClientFactory = httpClientFactory;
+        }
+
+        /// <inheritdoc/>
+        public ArticleModel Analyze(ArticleModel article, CancellationToken cancellationToken)
+        {
+            if (article == null)
+            {
+                throw new ArgumentNullException(nameof(article));
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, article.Link);
+            request.Headers.AcceptCharset.Add(new("utf-8"));
+            using var httpClient = this.httpClientFactory.Create();
+            var response = httpClient.Send(request, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // 无法解析
+                return article;
+            }
+
+            article.MagnetLinks = Parse(response.Content!.ReadAsStream(default));
             return article;
         }
 
-        article.MagnetLinks = Parse(response.Content!.ReadAsStream(default));
-        return article;
-    }
-
-    /// <summary>
-    /// 解析返回的内容
-    /// </summary>
-    /// <param name="content">返回内容</param>
-    /// <returns>解析出的磁链集合</returns>
-    private static IEnumerable<string> Parse(Stream content)
-    {
-        var doc = new HtmlDocument();
-        doc.Load(content);
-
-        // 寻找 <div class="entry-content">
-        var entryContentTags = doc.DocumentNode.SelectNodes("//div[@class=\"entry-content\"]");
-        if (entryContentTags == null)
+        /// <summary>
+        /// 解析返回的内容
+        /// </summary>
+        /// <param name="content">返回内容</param>
+        /// <returns>解析出的磁链集合</returns>
+        private static IEnumerable<string> Parse(Stream content)
         {
-            // 没有找到对应标签
-            return Array.Empty<string>();
-        }
+            var doc = new HtmlDocument();
+            doc.Load(content);
 
-        return entryContentTags.AsEnumerable()
-            .Select(entryContentTag => entryContentTag.InnerHtml)
-            .Select(innerHtml =>
+            // 寻找 <div class="entry-content">
+            var entryContentTags = doc.DocumentNode.SelectNodes("//div[@class=\"entry-content\"]");
+            if (entryContentTags == null)
             {
-                var matches = s_magnetLink.Matches(innerHtml);
-                return matches.Select(match => match.Groups[1].Value).Distinct();
-            })
-            .SelectMany(i => i)
-            .Select(i => MagnetPrefix + i);
+                // 没有找到对应标签
+                return Array.Empty<string>();
+            }
+
+            return entryContentTags.AsEnumerable()
+                .Select(entryContentTag => entryContentTag.InnerHtml)
+                .Select(innerHtml =>
+                {
+                    var matches = MagnetLink.Matches(innerHtml);
+                    return matches.Select(match => match.Groups[1].Value).Distinct();
+                })
+                .SelectMany(i => i)
+                .Select(i => MagnetPrefix + i);
+        }
     }
 }
