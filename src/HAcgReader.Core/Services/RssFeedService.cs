@@ -172,7 +172,7 @@ namespace HAcgReader.Core.Services
         /// </summary>
         /// <param name="dateTimeStr">字符串表示的日期和时间</param>
         /// <param name="dateTime">解析结果</param>
-        /// <returns><c>true</c> 表示解析成功，<c>false</c> 表示失败</returns>
+        /// <returns><see langword="true"/> 表示解析成功，<see langword="false"/> 表示失败</returns>
         /// <remarks>
         /// 由于 RSS 返回的日期为类似于 <c>Sat, 01 Jan 2022 00:00:00 +0000</c> 这样的结果，
         /// 其中的时区无法被标准库识别，所以需要进行处理，为其加上“<c>:</c>”。
