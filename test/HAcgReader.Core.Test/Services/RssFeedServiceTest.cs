@@ -28,7 +28,7 @@ namespace HAcgReader.Core.Test.Services
         private const string TestXmlHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>";
 
         /// <summary>
-        /// 测试 <see cref="RssFeedService(string)"/> 和 <see cref="RssFeedService(string, HttpClient)"/>
+        /// 测试 <see cref="RssFeedService(string)"/>
         /// </summary>
         [TestMethod]
         public void TestConstructor()
@@ -123,7 +123,7 @@ namespace HAcgReader.Core.Test.Services
         }
 
         /// <summary>
-        /// 测试 <see cref="RssFeedService.FetchNextAsync(CancellationToken)"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
+        /// 测试 <see cref="RssFeedService.FetchNext(CancellationToken)"/> 在 <c>&lt;item&gt;</c> 下各个标签为空时的情况
         /// </summary>
         [TestMethod]
         public void TestFetchNextAsyncEmptyTagsInItem()

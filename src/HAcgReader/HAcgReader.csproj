@@ -5,7 +5,6 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <AnalysisLevel>latest-all</AnalysisLevel>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <StartupObject>HAcgReader.App</StartupObject>
   </PropertyGroup>

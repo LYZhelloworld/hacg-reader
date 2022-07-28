@@ -22,7 +22,7 @@ namespace HAcgReader.Core.Test.Services
     public class DomainServiceTest
     {
         /// <summary>
-        /// 测试 <see cref="DomainService.DomainService"/>
+        /// 测试 <see cref="DomainService()"/>
         /// </summary>
         [TestMethod]
         public void TestConstructor()

@@ -85,7 +85,7 @@ namespace HAcgReader.Core.Test.Services
         }
 
         /// <summary>
-        /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/> 在 HTTP 请求失败时的情况
+        /// 测试 <see cref="PageAnalyzerService.Analyze(ArticleModel, CancellationToken)"/> 在 HTTP 请求失败时的情况
         /// </summary>
         [TestMethod]
         public void TestAnalyzeAsyncHttpErrorResponse()
@@ -111,7 +111,7 @@ namespace HAcgReader.Core.Test.Services
         }
 
         /// <summary>
-        /// 测试 <see cref="PageAnalyzerService.AnalyzeAsync(ArticleModel, CancellationToken)"/> 在参数为 <c>null</c> 时的情况
+        /// 测试 <see cref="PageAnalyzerService.Analyze(ArticleModel, CancellationToken)"/> 在参数为 <see langword="null"/> 时的情况
         /// </summary>
         [TestMethod]
         public void TestAnalyzeAsyncNullArgument()
