@@ -3,8 +3,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-using System;
-using System.Windows;
+using System.Runtime.InteropServices;
 
-[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
-[assembly: CLSCompliant(false)]
+[assembly: ComVisible(false)]
+[assembly: Guid("f7ca7d83-54dc-4cf6-bbba-0a4cbc400070")]
+[assembly: CLSCompliant(true)]

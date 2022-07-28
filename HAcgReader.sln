@@ -5,17 +5,15 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader", "src\HAcgReader\HAcgReader.csproj", "{5AAB8C65-4271-4F4B-8F7A-B73B94AD5157}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{DAC0024D-C0D4-4343-AB12-1F21C13166C5}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitignore = .gitignore
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Test", "test\HAcgReader.Test\HAcgReader.Test.csproj", "{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Core.Test", "test\HAcgReader.Core.Test\HAcgReader.Core.Test.csproj", "{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Core", "src\HAcgReader.Core\HAcgReader.Core.csproj", "{CBC1F226-5284-49D7-B071-EB3E33F00F2B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HAcgReader.Resources", "src\HAcgReader.Resources\HAcgReader.Resources.csproj", "{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BE33268B-9045-4721-BFAB-34AAA29B9B60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0183067B-6545-4A40-8836-48E86EDD0995}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +33,19 @@ Global
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBC1F226-5284-49D7-B071-EB3E33F00F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5AAB8C65-4271-4F4B-8F7A-B73B94AD5157} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
+		{B1F13BEA-AF03-456A-BB83-D63C8D69A3E8} = {0183067B-6545-4A40-8836-48E86EDD0995}
+		{CBC1F226-5284-49D7-B071-EB3E33F00F2B} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
+		{4B929FF9-5233-4EFA-B615-F4F380F0A1D2} = {BE33268B-9045-4721-BFAB-34AAA29B9B60}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9439EC8A-B1C6-4748-AFB4-B1EAF2EDCED9}

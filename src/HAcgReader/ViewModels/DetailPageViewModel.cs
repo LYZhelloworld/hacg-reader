@@ -1,48 +1,52 @@
-﻿using HAcgReader.Models;
-using System.Windows;
+﻿// <copyright file="DetailPageViewModel.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-namespace HAcgReader.ViewModels;
-
-/// <summary>
-/// 详情页视图模型
-/// </summary>
-public class DetailPageViewModel : BaseViewModel
+namespace HAcgReader.ViewModels
 {
-    #region View Model Properties
+    using System.Windows;
+    using HAcgReader.Core.Models;
+
     /// <summary>
-    /// 被选中的文章
+    /// 详情页视图模型
     /// </summary>
-    public ArticleModel SelectedArticle
+    public class DetailPageViewModel : BaseViewModel
     {
-        get => _selectedArticle;
-        set
+        /// <summary>
+        /// 被选中的文章
+        /// </summary>
+        private ArticleModel selectedArticle = new();
+
+        /// <summary>
+        /// 详情页可见性
+        /// </summary>
+        private Visibility visibility = Visibility.Hidden;
+
+        /// <summary>
+        /// 被选中的文章
+        /// </summary>
+        public ArticleModel SelectedArticle
         {
-            _selectedArticle = value;
-            OnPropertyChanged();
+            get => this.selectedArticle;
+            set
+            {
+                this.selectedArticle = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 详情页可见性
+        /// </summary>
+        public Visibility Visibility
+        {
+            get => this.visibility;
+            set
+            {
+                this.visibility = value;
+                this.OnPropertyChanged();
+            }
         }
     }
-
-    /// <summary>
-    /// 被选中的文章
-    /// </summary>
-    private ArticleModel _selectedArticle = new();
-
-    /// <summary>
-    /// 详情页可见性
-    /// </summary>
-    public Visibility Visibility
-    {
-        get => _Visibility;
-        set
-        {
-            _Visibility = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// 详情页可见性
-    /// </summary>
-    private Visibility _Visibility = Visibility.Hidden;
-    #endregion
 }

@@ -19,3 +19,4 @@
 - [HtmlAgilityPack](https://www.nuget.org/packages/HtmlAgilityPack)：用于解析 HTML 文档
 - [Microsoft.Toolkit.Mvvm](https://www.nuget.org/packages/Microsoft.Toolkit.Mvvm)：用于提供 MVVM 支持
 - [Moq](https://www.nuget.org/packages/Moq)：用于单元测试
+- [VocaDb.ResXFileCodeGenerator](https://www.nuget.org/packages/VocaDb.ResXFileCodeGenerator)：用于生成资源文件

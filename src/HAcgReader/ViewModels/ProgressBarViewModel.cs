@@ -1,63 +1,67 @@
-﻿namespace HAcgReader.ViewModels;
+﻿// <copyright file="ProgressBarViewModel.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-/// <summary>
-/// 滚动条视图模型
-/// </summary>
-public class ProgressBarViewModel : BaseViewModel
+namespace HAcgReader.ViewModels
 {
-    #region View Model Properties
     /// <summary>
-    /// 滚动条当前值
+    /// 滚动条视图模型
     /// </summary>
-    public int Value
+    public class ProgressBarViewModel : BaseViewModel
     {
-        get => _value;
-        set
+        /// <summary>
+        /// 滚动条当前值
+        /// </summary>
+        private int value;
+
+        /// <summary>
+        /// 滚动条最大值
+        /// </summary>
+        private int maximum = 10;
+
+        /// <summary>
+        /// 滚动条处于不确定状态
+        /// </summary>
+        private bool isIndeterminate;
+
+        /// <summary>
+        /// 滚动条当前值
+        /// </summary>
+        public int Value
         {
-            _value = value;
-            OnPropertyChanged();
+            get => this.value;
+            set
+            {
+                this.value = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 滚动条最大值
+        /// </summary>
+        public int Maximum
+        {
+            get => this.maximum;
+            set
+            {
+                this.maximum = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 滚动条处于不确定状态
+        /// </summary>
+        public bool IsIndeterminate
+        {
+            get => this.isIndeterminate;
+            set
+            {
+                this.isIndeterminate = value;
+                this.OnPropertyChanged();
+            }
         }
     }
-
-    /// <summary>
-    /// 滚动条当前值
-    /// </summary>
-    private int _value;
-
-    /// <summary>
-    /// 滚动条最大值
-    /// </summary>
-    public int Maximum
-    {
-        get => _maximum;
-        set
-        {
-            _maximum = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// 滚动条最大值
-    /// </summary>
-    private int _maximum = 10;
-
-    /// <summary>
-    /// 滚动条处于不确定状态
-    /// </summary>
-    public bool IsIndeterminate
-    {
-        get => _IsIndeterminate;
-        set
-        {
-            _IsIndeterminate = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// 滚动条处于不确定状态
-    /// </summary>
-    private bool _IsIndeterminate;
-    #endregion
 }

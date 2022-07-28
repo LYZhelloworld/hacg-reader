@@ -1,112 +1,108 @@
-﻿using HAcgReader.Resources;
-using Microsoft.Toolkit.Mvvm.Input;
-using System;
-using System.Windows.Input;
+﻿// <copyright file="FetchButtonViewModel.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-namespace HAcgReader.ViewModels;
-
-/// <summary>
-/// 拉取按钮视图模型
-/// </summary>
-public class FetchButtonViewModel : BaseViewModel
+namespace HAcgReader.ViewModels
 {
-    #region View Model Properties
+    using System;
+    using System.Windows.Input;
+    using HAcgReader.Resources;
+    using Microsoft.Toolkit.Mvvm.Input;
+
     /// <summary>
-    /// 拉取按钮是否有效
+    /// 拉取按钮视图模型
     /// </summary>
-    public bool IsEnabled
+    public class FetchButtonViewModel : BaseViewModel
     {
-        get => _isEnabled;
-        set
+        /// <summary>
+        /// 拉取命令
+        /// </summary>
+        private readonly RelayCommand command;
+
+        /// <summary>
+        /// 拉取按钮是否有效
+        /// </summary>
+        private bool isEnabled = true;
+
+        /// <summary>
+        /// 是否正在拉取
+        /// </summary>
+        private bool isFetching;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public FetchButtonViewModel()
         {
-            _isEnabled = value;
-            OnPropertyChanged();
+            this.command = new RelayCommand(this.Execute);
         }
-    }
 
-    /// <summary>
-    /// 拉取按钮是否有效
-    /// </summary>
-    private bool _isEnabled = true;
+        /// <summary>
+        /// 按钮点击事件
+        /// </summary>
+        public event EventHandler? Started;
 
-    /// <summary>
-    /// 是否正在拉取
-    /// </summary>
-    public bool IsFetching
-    {
-        get => _isFetching;
-        set
+        /// <summary>
+        /// 按钮取消事件
+        /// </summary>
+        public event EventHandler? Cancelled;
+
+        /// <summary>
+        /// 拉取按钮是否有效
+        /// </summary>
+        public bool IsEnabled
         {
-            _isFetching = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(ButtonText));
-        }
-    }
-
-    /// <summary>
-    /// 是否正在拉取
-    /// </summary>
-    private bool _isFetching;
-
-    /// <summary>
-    /// 按钮文本
-    /// </summary>
-    public string ButtonText => IsFetching ? Strings.FetchButtonTextFetching : Strings.FetchButtonTextNotFetching;
-    #endregion
-
-    #region Commands
-    /// <summary>
-    /// 拉取命令
-    /// </summary>
-    public ICommand Command => _command;
-
-    /// <summary>
-    /// 拉取命令
-    /// </summary>
-    private readonly RelayCommand _command;
-    #endregion
-
-    #region Events
-    /// <summary>
-    /// 按钮点击事件
-    /// </summary>
-    public event EventHandler? Started;
-
-    /// <summary>
-    /// 按钮取消事件
-    /// </summary>
-    public event EventHandler? Cancelled;
-    #endregion
-
-    #region Constructors
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    public FetchButtonViewModel()
-    {
-        _command = new RelayCommand(Execute);
-    }
-    #endregion
-
-    #region Methods
-    /// <summary>
-    /// 按钮点击
-    /// </summary>
-    public void Execute()
-    {
-        if (IsEnabled)
-        {
-            if (IsFetching)
+            get => this.isEnabled;
+            set
             {
-                Cancelled?.Invoke(this, EventArgs.Empty);
-                IsFetching = false;
-            }
-            else
-            {
-                IsFetching = true;
-                Started?.Invoke(this, EventArgs.Empty);
+                this.isEnabled = value;
+                this.OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// 是否正在拉取
+        /// </summary>
+        public bool IsFetching
+        {
+            get => this.isFetching;
+            set
+            {
+                this.isFetching = value;
+                this.OnPropertyChanged();
+                this.OnPropertyChanged(nameof(this.ButtonText));
+            }
+        }
+
+        /// <summary>
+        /// 按钮文本
+        /// </summary>
+        public string ButtonText => this.IsFetching ? Strings.FetchButtonTextFetching : Strings.FetchButtonTextNotFetching;
+
+        /// <summary>
+        /// 拉取命令
+        /// </summary>
+        public ICommand Command => this.command;
+
+        /// <summary>
+        /// 按钮点击
+        /// </summary>
+        public void Execute()
+        {
+            if (this.IsEnabled)
+            {
+                if (this.IsFetching)
+                {
+                    this.Cancelled?.Invoke(this, EventArgs.Empty);
+                    this.IsFetching = false;
+                }
+                else
+                {
+                    this.IsFetching = true;
+                    this.Started?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
     }
-    #endregion
 }

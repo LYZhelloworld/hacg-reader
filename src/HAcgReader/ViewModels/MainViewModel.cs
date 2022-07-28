@@ -1,125 +1,126 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
+﻿// <copyright file="MainViewModel.cs" company="Helloworld">
+// Copyright (c) Helloworld. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
 
-namespace HAcgReader.ViewModels;
-
-/// <summary>
-/// 主窗口视图模型
-/// </summary>
-public class MainViewModel : BaseViewModel
+namespace HAcgReader.ViewModels
 {
-    #region Fields
-    /// <summary>
-    /// 文章列表视图模型
-    /// </summary>
-    public ArticleListViewModel ArticleListViewModel { get; private set; }
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
 
     /// <summary>
-    /// 拉取按钮视图模型
+    /// 主窗口视图模型
     /// </summary>
-    public FetchButtonViewModel FetchButtonViewModel { get; private set; }
-
-    /// <summary>
-    /// 详情页视图模型
-    /// </summary>
-    public DetailPageViewModel DetailPageViewModel { get; private set; }
-
-    /// <summary>
-    /// 滚动条视图模型
-    /// </summary>
-    public ProgressBarViewModel ProgressBarViewModel { get; private set; }
-
-    /// <summary>
-    /// 拉取事件 <see cref="CancellationToken"/> 源
-    /// </summary>
-    private CancellationTokenSource? _fetchingCancellationTokenSource;
-
-    /// <summary>
-    /// 拉取事件
-    /// </summary>
-    private Task? _fetchingTask;
-    #endregion
-
-    #region Constructors
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    /// <param name="articleListViewModel">文章列表视图模型</param>
-    /// <param name="fetchButtonViewModel">拉取按钮视图模型</param>
-    /// <param name="detailPageViewModel">详情页视图模型</param>
-    /// <param name="progressBarViewModel">滚动条视图模型</param>
-    public MainViewModel(ArticleListViewModel articleListViewModel,
-                         FetchButtonViewModel fetchButtonViewModel,
-                         DetailPageViewModel detailPageViewModel,
-                         ProgressBarViewModel progressBarViewModel)
+    public class MainViewModel : BaseViewModel
     {
-        ArticleListViewModel = articleListViewModel;
-        FetchButtonViewModel = fetchButtonViewModel;
-        DetailPageViewModel = detailPageViewModel;
-        ProgressBarViewModel = progressBarViewModel;
+        /// <summary>
+        /// 拉取事件
+        /// </summary>
+        private Task? fetchingTask;
 
-        InitializeViewModelEventHandlers();
-    }
-    #endregion
+        /// <summary>
+        /// 拉取事件 <see cref="CancellationToken"/> 源
+        /// </summary>
+        private CancellationTokenSource? fetchingCancellationTokenSource;
 
-    #region Methods
-    /// <summary>
-    /// 初始化视图模型事件监听器
-    /// </summary>
-    private void InitializeViewModelEventHandlers()
-    {
-        ArticleListViewModel.ArticleSelected += (sender, e) =>
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="articleListViewModel">文章列表视图模型</param>
+        /// <param name="fetchButtonViewModel">拉取按钮视图模型</param>
+        /// <param name="detailPageViewModel">详情页视图模型</param>
+        /// <param name="progressBarViewModel">滚动条视图模型</param>
+        public MainViewModel(
+            ArticleListViewModel articleListViewModel,
+            FetchButtonViewModel fetchButtonViewModel,
+            DetailPageViewModel detailPageViewModel,
+            ProgressBarViewModel progressBarViewModel)
         {
-            DetailPageViewModel.SelectedArticle = e.SelectedArticle;
-            DetailPageViewModel.Visibility = Visibility.Visible;
-        };
-        ArticleListViewModel.FetchStarted += (sender, e) =>
-        {
-            ProgressBarViewModel.IsIndeterminate = true;
-        };
-        ArticleListViewModel.RssFeedFetched += (sender, e) =>
-        {
-            ProgressBarViewModel.IsIndeterminate = false;
-            ProgressBarViewModel.Maximum = e.Total;
-            ProgressBarViewModel.Value = 0;
-        };
-        ArticleListViewModel.PageAnalysisCompleted += (sender, e) =>
-        {
-            ProgressBarViewModel.Value = e.Progress;
-        };
-        ArticleListViewModel.FetchCompleted += (sender, e) =>
-        {
-            ProgressBarViewModel.Value = 0;
-            FetchButtonViewModel.IsFetching = false;
+            this.ArticleListViewModel = articleListViewModel;
+            this.FetchButtonViewModel = fetchButtonViewModel;
+            this.DetailPageViewModel = detailPageViewModel;
+            this.ProgressBarViewModel = progressBarViewModel;
 
-            _fetchingCancellationTokenSource?.Dispose();
-            _fetchingCancellationTokenSource = null;
-            _fetchingTask = null;
-        };
-        ArticleListViewModel.FetchCancelled += (sender, e) =>
-        {
-            ProgressBarViewModel.Value = 0;
-            ProgressBarViewModel.IsIndeterminate = false;
-        };
+            this.InitializeViewModelEventHandlers();
+        }
 
-        FetchButtonViewModel.Started += (sender, e) =>
+        /// <summary>
+        /// 文章列表视图模型
+        /// </summary>
+        public ArticleListViewModel ArticleListViewModel { get; private set; }
+
+        /// <summary>
+        /// 拉取按钮视图模型
+        /// </summary>
+        public FetchButtonViewModel FetchButtonViewModel { get; private set; }
+
+        /// <summary>
+        /// 详情页视图模型
+        /// </summary>
+        public DetailPageViewModel DetailPageViewModel { get; private set; }
+
+        /// <summary>
+        /// 滚动条视图模型
+        /// </summary>
+        public ProgressBarViewModel ProgressBarViewModel { get; private set; }
+
+        /// <summary>
+        /// 初始化视图模型事件监听器
+        /// </summary>
+        private void InitializeViewModelEventHandlers()
         {
-            _fetchingCancellationTokenSource = new();
-            _fetchingTask = Task.Run(() => ArticleListViewModel.Fetch(_fetchingCancellationTokenSource.Token));
-        };
-        FetchButtonViewModel.Cancelled += (sender, e) =>
-        {
-            FetchButtonViewModel.IsEnabled = false;
-            _fetchingCancellationTokenSource?.Cancel();
-            _fetchingCancellationTokenSource?.Dispose();
-            Task.Run(() =>
+            this.ArticleListViewModel.ArticleSelected += (sender, e) =>
             {
-                _fetchingTask?.Wait();
-                _fetchingTask = null;
-                FetchButtonViewModel.IsEnabled = true;
-            });
-        };
+                this.DetailPageViewModel.SelectedArticle = e.SelectedArticle;
+                this.DetailPageViewModel.Visibility = Visibility.Visible;
+            };
+            this.ArticleListViewModel.FetchStarted += (sender, e) =>
+            {
+                this.ProgressBarViewModel.IsIndeterminate = true;
+            };
+            this.ArticleListViewModel.RssFeedFetched += (sender, e) =>
+            {
+                this.ProgressBarViewModel.IsIndeterminate = false;
+                this.ProgressBarViewModel.Maximum = e.Total;
+                this.ProgressBarViewModel.Value = 0;
+            };
+            this.ArticleListViewModel.PageAnalysisCompleted += (sender, e) =>
+            {
+                this.ProgressBarViewModel.Value = e.Progress;
+            };
+            this.ArticleListViewModel.FetchCompleted += (sender, e) =>
+            {
+                this.ProgressBarViewModel.Value = 0;
+                this.FetchButtonViewModel.IsFetching = false;
+
+                this.fetchingCancellationTokenSource?.Dispose();
+                this.fetchingCancellationTokenSource = null;
+                this.fetchingTask = null;
+            };
+            this.ArticleListViewModel.FetchCancelled += (sender, e) =>
+            {
+                this.ProgressBarViewModel.Value = 0;
+                this.ProgressBarViewModel.IsIndeterminate = false;
+            };
+
+            this.FetchButtonViewModel.Started += (sender, e) =>
+            {
+                this.fetchingCancellationTokenSource = new();
+                this.fetchingTask = Task.Run(() => this.ArticleListViewModel.Fetch(this.fetchingCancellationTokenSource.Token));
+            };
+            this.FetchButtonViewModel.Cancelled += (sender, e) =>
+            {
+                this.FetchButtonViewModel.IsEnabled = false;
+                this.fetchingCancellationTokenSource?.Cancel();
+                this.fetchingCancellationTokenSource?.Dispose();
+                Task.Run(() =>
+                {
+                    this.fetchingTask?.Wait();
+                    this.fetchingTask = null;
+                    this.FetchButtonViewModel.IsEnabled = true;
+                });
+            };
+        }
     }
-    #endregion
 }
