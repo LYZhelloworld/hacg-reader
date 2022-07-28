@@ -10,8 +10,8 @@ namespace HAcgReader.ViewModels
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using HAcgReader.Models;
-    using HAcgReader.Services;
+    using HAcgReader.Core.Models;
+    using HAcgReader.Core.Services;
 
     /// <summary>
     /// 文章列表视图模型

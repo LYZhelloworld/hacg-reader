@@ -3,14 +3,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Services
+namespace HAcgReader.Core.Services
 {
     using System.Globalization;
     using System.Text.RegularExpressions;
     using System.Web;
     using System.Xml;
-    using HAcgReader.Factories;
-    using HAcgReader.Models;
+    using HAcgReader.Core.Factories;
+    using HAcgReader.Core.Models;
 
     /// <summary>
     /// 获取神社 RSS Feed

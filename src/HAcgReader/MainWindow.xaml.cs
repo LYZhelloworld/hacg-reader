@@ -10,8 +10,8 @@ namespace HAcgReader
     using System.Windows;
     using System.Windows.Documents;
     using System.Windows.Navigation;
+    using HAcgReader.Core.Services;
     using HAcgReader.Resources;
-    using HAcgReader.Services;
     using HAcgReader.ViewModels;
 
     /// <summary>

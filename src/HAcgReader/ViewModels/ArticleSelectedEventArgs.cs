@@ -6,7 +6,7 @@
 namespace HAcgReader.ViewModels
 {
     using System;
-    using HAcgReader.Models;
+    using HAcgReader.Core.Models;
 
     /// <summary>
     /// 选中文章事件参数

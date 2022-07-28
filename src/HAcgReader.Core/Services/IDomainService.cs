@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Services
+namespace HAcgReader.Core.Services
 {
     /// <summary>
     /// 提供与神社域名相关的功能

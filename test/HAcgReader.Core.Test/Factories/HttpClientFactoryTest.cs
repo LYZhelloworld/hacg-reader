@@ -3,11 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Test.Factories
+namespace HAcgReader.Core.Test.Factories
 {
     using System.Diagnostics.CodeAnalysis;
     using FluentAssertions;
-    using HAcgReader.Factories;
+    using HAcgReader.Core.Factories;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>

@@ -6,7 +6,7 @@
 namespace HAcgReader.ViewModels
 {
     using System.Windows;
-    using HAcgReader.Models;
+    using HAcgReader.Core.Models;
 
     /// <summary>
     /// 详情页视图模型

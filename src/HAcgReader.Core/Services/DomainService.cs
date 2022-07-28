@@ -3,10 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Services
+namespace HAcgReader.Core.Services
 {
     using System.Text.RegularExpressions;
-    using HAcgReader.Factories;
+    using HAcgReader.Core.Factories;
 
     /// <summary>
     /// 提供与神社域名相关的功能

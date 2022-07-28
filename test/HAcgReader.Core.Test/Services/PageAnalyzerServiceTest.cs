@@ -3,15 +3,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Test.Services
+namespace HAcgReader.Core.Test.Services
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Net;
     using System.Reflection;
     using FluentAssertions;
-    using HAcgReader.Models;
-    using HAcgReader.Services;
-    using HAcgReader.Test.TestHelpers;
+    using HAcgReader.Core.Models;
+    using HAcgReader.Core.Services;
+    using HAcgReader.Core.Test.TestExtensions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
 

@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Models
+namespace HAcgReader.Core.Models
 {
     /// <summary>
     /// 文章模型

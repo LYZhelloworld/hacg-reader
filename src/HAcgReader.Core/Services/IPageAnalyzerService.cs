@@ -3,9 +3,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Services
+namespace HAcgReader.Core.Services
 {
-    using HAcgReader.Models;
+    using HAcgReader.Core.Models;
 
     /// <summary>
     /// 分析页面内容，寻找磁链

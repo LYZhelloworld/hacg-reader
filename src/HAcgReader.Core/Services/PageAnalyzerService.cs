@@ -3,11 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Services
+namespace HAcgReader.Core.Services
 {
     using System.Text.RegularExpressions;
-    using HAcgReader.Factories;
-    using HAcgReader.Models;
+    using HAcgReader.Core.Factories;
+    using HAcgReader.Core.Models;
     using HtmlAgilityPack;
 
     /// <summary>

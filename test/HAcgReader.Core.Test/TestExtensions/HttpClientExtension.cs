@@ -3,10 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader.Test.TestHelpers
+namespace HAcgReader.Core.Test.TestExtensions
 {
     using System.Diagnostics.CodeAnalysis;
-    using HAcgReader.Factories;
+    using HAcgReader.Core.Factories;
     using Moq;
     using Moq.Protected;
 
