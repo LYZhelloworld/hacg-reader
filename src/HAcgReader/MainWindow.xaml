@@ -33,9 +33,9 @@
                   Grid.Row="0"
                   Margin="0,0,0,2"
                   DataContext="{Binding ArticleListViewModel}"
+                  d:DataContext="{d:DesignInstance Type=viewmodels:ArticleListViewModel}"
                   ItemsSource="{Binding Articles}"
-                  d:ItemsSource="{d:SampleData ItemCount=20}"
-                  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                  SelectedIndex="{Binding SelectedIndex}"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
@@ -76,6 +76,7 @@
                 Grid.Row="1"
                 x:Name="FetchButton"
                 DataContext="{Binding FetchButtonViewModel}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:FetchButtonViewModel}"
                 Command="{Binding Command}"
                 IsEnabled="{Binding IsEnabled}">
             <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
@@ -87,6 +88,7 @@
                     Grid.RowSpan="2"
                     Margin="5,0,0,0"
                     DataContext="{Binding DetailPageViewModel}"
+                    d:DataContext="{d:DesignInstance Type=viewmodels:DetailPageViewModel}"
                     Visibility="{Binding Visibility}"
                     d:Visibility="Visible">
             <TextBlock Text="{Binding SelectedArticle.Title}"
@@ -126,6 +128,7 @@
                      Grid.Row="1"
                      Grid.Column="2"
                      DataContext="{Binding ProgressBarViewModel}"
+                     d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarViewModel}"
                      Value="{Binding Value}"
                      Minimum="0"
                      Maximum="{Binding Maximum}"

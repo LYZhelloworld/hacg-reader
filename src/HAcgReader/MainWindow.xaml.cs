@@ -37,7 +37,7 @@ namespace HAcgReader
                 Environment.Exit(-1);
             }
 
-            this.MainViewModel = new MainViewModel(new(domain), new(), new(), new());
+            this.MainViewModel = new MainViewModel(domain);
 
             this.InitializeComponent();
             this.MainViewModel.FetchButtonViewModel.Command.Execute(null);
