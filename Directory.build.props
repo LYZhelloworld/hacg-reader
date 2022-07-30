@@ -5,7 +5,7 @@
     <Copyright>Licensed under the MIT license.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <Company>Helloworld</Company>
     <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
     <AnalysisLevel>latest-all</AnalysisLevel>
