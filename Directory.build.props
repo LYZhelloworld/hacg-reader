@@ -28,7 +28,7 @@
   <Choose>
     <When Condition="'$(MSBuildProjectName)' != 'HAcgReader.Resources'">
       <PropertyGroup>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
       </PropertyGroup>
       <ItemGroup>

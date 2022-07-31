@@ -5,10 +5,12 @@
 
 namespace HAcgReader.ViewModels
 {
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using HAcgReader.Core.Services;
+    using HAcgReader.Resources;
 
     /// <summary>
     /// 主窗口视图模型
@@ -93,10 +95,15 @@ namespace HAcgReader.ViewModels
             }
             catch (TaskCanceledException)
             {
-                this.OnFetchCancelled();
             }
-
-            this.OnFetchCompleted();
+            catch (HttpRequestException)
+            {
+                MessageBox.Show(Strings.FetchFailedText, Strings.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                this.OnFetchCompleted();
+            }
         }
 
         /// <summary>
@@ -105,15 +112,6 @@ namespace HAcgReader.ViewModels
         protected void OnFetchStarted()
         {
             this.ProgressBarViewModel.IsIndeterminate = true;
-        }
-
-        /// <summary>
-        /// 拉取取消
-        /// </summary>
-        protected void OnFetchCancelled()
-        {
-            this.ProgressBarViewModel.Value = 0;
-            this.ProgressBarViewModel.IsIndeterminate = false;
         }
 
         /// <summary>
@@ -142,6 +140,9 @@ namespace HAcgReader.ViewModels
         protected void OnFetchCompleted()
         {
             this.ProgressBarViewModel.Value = 0;
+            this.ProgressBarViewModel.Maximum = 10;
+            this.ProgressBarViewModel.IsIndeterminate = false;
+
             this.FetchButtonViewModel.IsFetching = false;
 
             this.fetchingCancellationTokenSource?.Dispose();

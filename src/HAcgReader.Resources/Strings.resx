@@ -123,8 +123,17 @@
   <data name="ArticleLink" xml:space="preserve">
     <value>阅读文章</value>
   </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>取消</value>
+  </data>
   <data name="CommentCount" xml:space="preserve">
     <value>{0} 条评论</value>
+  </data>
+  <data name="DomainDialogTitle" xml:space="preserve">
+    <value>神社域名</value>
+  </data>
+  <data name="DomainNameLabel" xml:space="preserve">
+    <value>请输入神社域名</value>
   </data>
   <data name="ErrorCannotRetrieveDomain" xml:space="preserve">
     <value>找不到神社域名。请确保 acg.gy 能够正常访问。</value>
@@ -135,6 +144,9 @@
   <data name="FetchButtonTextNotFetching" xml:space="preserve">
     <value>更多</value>
   </data>
+  <data name="FetchFailedText" xml:space="preserve">
+    <value>网络错误，无法访问神社。</value>
+  </data>
   <data name="MagnetLinkCopied" xml:space="preserve">
     <value>已复制磁链：
 {0}</value>
@@ -144,6 +156,9 @@
   </data>
   <data name="MagnetLinksDetected" xml:space="preserve">
     <value>检测到的磁力链接（单击复制）</value>
+  </data>
+  <data name="OKButton" xml:space="preserve">
+    <value>确定</value>
   </data>
   <data name="PublishingDate" xml:space="preserve">
     <value>发布于 {0}</value>
