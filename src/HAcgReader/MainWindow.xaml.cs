@@ -29,6 +29,16 @@ namespace HAcgReader
             var domain = domainService.GetDomain();
             if (string.IsNullOrEmpty(domain))
             {
+                var domainDialog = new DomainDialog();
+                var result = domainDialog.ShowDialog();
+                if (result.GetValueOrDefault(false))
+                {
+                    domain = domainDialog.DomainDialogViewModel.Domain;
+                }
+            }
+
+            if (string.IsNullOrEmpty(domain))
+            {
                 MessageBox.Show(
                     Strings.ErrorCannotRetrieveDomain,
                     Strings.Title,
@@ -37,7 +47,7 @@ namespace HAcgReader
                 Environment.Exit(-1);
             }
 
-            this.MainViewModel = new MainViewModel(new(domain), new(), new(), new());
+            this.MainViewModel = new MainViewModel(domain);
 
             this.InitializeComponent();
             this.MainViewModel.FetchButtonViewModel.Command.Execute(null);

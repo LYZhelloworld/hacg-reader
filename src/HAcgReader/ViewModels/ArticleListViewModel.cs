@@ -8,10 +8,7 @@ namespace HAcgReader.ViewModels
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using HAcgReader.Core.Models;
-    using HAcgReader.Core.Services;
 
     /// <summary>
     /// 文章列表视图模型
@@ -19,19 +16,9 @@ namespace HAcgReader.ViewModels
     public class ArticleListViewModel : BaseViewModel
     {
         /// <summary>
-        /// 获取神社 RSS Feed
-        /// </summary>
-        private readonly IRssFeedService rssFeedService;
-
-        /// <summary>
-        /// 分析页面内容，寻找磁链
-        /// </summary>
-        private readonly IPageAnalyzerService pageAnalyzerService;
-
-        /// <summary>
         /// 未分析文章的缓存
         /// </summary>
-        private readonly List<ArticleModel> articleCache = new();
+        private readonly Queue<ArticleModel> articleCache = new();
 
         /// <summary>
         /// 文章列表
@@ -44,56 +31,9 @@ namespace HAcgReader.ViewModels
         private int selectedIndex = -1;
 
         /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="domain">神社域名</param>
-        public ArticleListViewModel(string domain)
-            : this(
-                rssFeedService: new RssFeedService(domain),
-                pageAnalyzerService: new PageAnalyzerService())
-        {
-        }
-
-        /// <summary>
-        /// 初始化所有依赖的构造函数
-        /// </summary>
-        /// <param name="rssFeedService">获取神社 RSS Feed</param>
-        /// <param name="pageAnalyzerService">分析页面内容，寻找磁链</param>
-        public ArticleListViewModel(IRssFeedService rssFeedService, IPageAnalyzerService pageAnalyzerService)
-        {
-            this.rssFeedService = rssFeedService;
-            this.pageAnalyzerService = pageAnalyzerService;
-        }
-
-        /// <summary>
         /// 选中文章事件
         /// </summary>
         public event EventHandler<ArticleSelectedEventArgs>? ArticleSelected;
-
-        /// <summary>
-        /// 拉取开始事件
-        /// </summary>
-        public event EventHandler? FetchStarted;
-
-        /// <summary>
-        /// RSS Feed 拉取完毕事件
-        /// </summary>
-        public event EventHandler<RssFeedFetchedEventArgs>? RssFeedFetched;
-
-        /// <summary>
-        /// 页面分析结束事件
-        /// </summary>
-        public event EventHandler<PageAnalysisCompletedEventArgs>? PageAnalysisCompleted;
-
-        /// <summary>
-        /// 拉取完毕事件
-        /// </summary>
-        public event EventHandler? FetchCompleted;
-
-        /// <summary>
-        /// 拉取取消事件
-        /// </summary>
-        public event EventHandler? FetchCancelled;
 
         /// <summary>
         /// 文章列表
@@ -107,6 +47,24 @@ namespace HAcgReader.ViewModels
                 this.OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// 未分析文章的缓存
+        /// </summary>
+        public IEnumerable<ArticleModel> ArticleCache
+        {
+            get => this.articleCache;
+        }
+
+        /// <summary>
+        /// 文章缓存是否存有文章
+        /// </summary>
+        public bool HasCachedArticles => this.articleCache.Any();
+
+        /// <summary>
+        /// 缓存中的文章个数
+        /// </summary>
+        public int CacheCount => this.articleCache.Count;
 
         /// <summary>
         /// 被选中文章的下标
@@ -127,59 +85,38 @@ namespace HAcgReader.ViewModels
         }
 
         /// <summary>
-        /// 拉取并分析文章
+        /// 添加新文章到缓存，同时过滤掉链接相同的重复文章
         /// </summary>
-        /// <param name="cancellationToken">取消令牌</param>
-        public void Fetch(CancellationToken cancellationToken)
+        /// <param name="fetchedArticles">拉取到的新文章</param>
+        public void AddDistinctArticlesToCache(IEnumerable<ArticleModel> fetchedArticles)
         {
-            this.FetchStarted?.Invoke(this, EventArgs.Empty);
-
-            try
-            {
-                this.FetchInternal(cancellationToken);
-            }
-            catch (TaskCanceledException)
-            {
-                this.FetchCancelled?.Invoke(this, EventArgs.Empty);
-            }
-
-            this.FetchCompleted?.Invoke(this, EventArgs.Empty);
+            // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
+            fetchedArticles
+                .Where(newArticle => !this.articles.Exists(article => article.Link == newArticle.Link))
+                .ToList()
+                .ForEach(this.articleCache.Enqueue);
         }
 
         /// <summary>
-        /// 拉取并分析文章
+        /// 弹出缓存中第一个文章对象
         /// </summary>
-        /// <param name="cancellationToken">取消令牌</param>
-        /// <exception cref="TaskCanceledException">在任务取消时抛出</exception>
-        private void FetchInternal(CancellationToken cancellationToken)
+        /// <returns>缓存中第一个文章</returns>
+        public ArticleModel PopFirstCachedArticle()
         {
-            // 如果未分析完毕的文章缓存为空则拉取新文章，否则继续处理
-            if (this.articleCache.Count == 0)
-            {
-                // 有时会出现获取到的内容重复的现象，暂时先采用这种办法过滤
-                var fetchedArticles = this.rssFeedService.FetchNext(cancellationToken)
-                    .Where(newArticle => !this.articles.Exists(article => article.Link == newArticle.Link));
-                this.articleCache.AddRange(fetchedArticles);
-            }
+            return this.articleCache.Dequeue();
+        }
 
-            var processed = 0;
-            var total = this.articleCache.Count;
-            this.RssFeedFetched?.Invoke(this, new() { Total = total });
-
-            while (this.articleCache.Count > 0)
-            {
-                var article = this.articleCache[0];
-                var analyzedArticle = this.pageAnalyzerService.Analyze(article, cancellationToken);
-
-                // 需要创建新的 List 对象才能更新绑定
-                var newArticles = this.articles.ToList();
-                newArticles.Add(analyzedArticle);
-                this.Articles = newArticles;
-
-                this.articleCache.RemoveAt(0);
-                processed++;
-                this.PageAnalysisCompleted?.Invoke(this, new() { Progress = processed });
-            }
+        /// <summary>
+        /// 添加新文章
+        /// </summary>
+        /// <param name="article">新文章</param>
+        /// <remarks>如果直接向 <see cref="Articles"/> 添加的话，可能不会更新绑定</remarks>
+        public void AddArticle(ArticleModel article)
+        {
+            // 需要创建新的 List 对象才能更新绑定
+            var newArticles = this.articles.ToList();
+            newArticles.Add(article);
+            this.Articles = newArticles;
         }
     }
 }

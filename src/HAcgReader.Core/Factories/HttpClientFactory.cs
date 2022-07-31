@@ -13,7 +13,7 @@ namespace HAcgReader.Core.Factories
     public class HttpClientFactory : IHttpClientFactory
     {
         /// <summary>
-        /// The default user agent.
+        /// 默认 User Agent
         /// </summary>
         private const string UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
             "AppleWebKit/537.36 (KHTML, like Gecko) " +
