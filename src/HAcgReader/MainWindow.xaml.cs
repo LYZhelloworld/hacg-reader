@@ -6,11 +6,7 @@
 namespace HAcgReader
 {
     using System;
-    using System.Diagnostics;
-    using System.Globalization;
     using System.Windows;
-    using System.Windows.Documents;
-    using System.Windows.Navigation;
     using HAcgReader.Core.Services;
     using HAcgReader.Resources;
     using HAcgReader.ViewModels;
@@ -67,34 +63,6 @@ namespace HAcgReader
         private void AutoThemeChange(object sender, EventArgs e)
         {
             Wpf.Ui.Appearance.Watcher.Watch(this, Wpf.Ui.Appearance.BackgroundType.Mica, true);
-        }
-
-        /// <summary>
-        /// 文章链接、文章评论链接点击事件处理
-        /// </summary>
-        /// <param name="sender">事件发送者</param>
-        /// <param name="e">事件参数</param>
-        private void Link_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            var link = ((Hyperlink)sender).NavigateUri.AbsoluteUri;
-            Process.Start(new ProcessStartInfo()
-            {
-                FileName = link,
-                UseShellExecute = true,
-            });
-            e.Handled = true;
-        }
-
-        /// <summary>
-        /// 磁力链接点击事件处理
-        /// </summary>
-        /// <param name="sender">事件发送者</param>
-        /// <param name="e">事件参数</param>
-        private void MagnetLink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            var magnetLink = ((Hyperlink)sender).NavigateUri.AbsoluteUri;
-            Clipboard.SetText(magnetLink);
-            MessageBox.Show(string.Format(CultureInfo.CurrentCulture, Strings.MagnetLinkCopied, magnetLink), Strings.Title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
