@@ -18,7 +18,7 @@ namespace HAcgReader
     /// <summary>
     /// MainWindow.xaml 交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Wpf.Ui.Controls.UiWindow
     {
         /// <summary>
         /// 构造函数
@@ -50,6 +50,9 @@ namespace HAcgReader
             this.MainViewModel = new MainViewModel(domain);
 
             this.InitializeComponent();
+
+            this.Loaded += this.AutoThemeChange;
+
             this.MainViewModel.FetchButtonViewModel.Command.Execute(null);
         }
 
@@ -57,6 +60,14 @@ namespace HAcgReader
         /// 主窗口视图模型
         /// </summary>
         public MainViewModel MainViewModel { get; private set; }
+
+        /// <summary>
+        /// 设置自动检测暗色模式
+        /// </summary>
+        private void AutoThemeChange(object sender, EventArgs e)
+        {
+            Wpf.Ui.Appearance.Watcher.Watch(this, Wpf.Ui.Appearance.BackgroundType.Mica, true);
+        }
 
         /// <summary>
         /// 文章链接、文章评论链接点击事件处理

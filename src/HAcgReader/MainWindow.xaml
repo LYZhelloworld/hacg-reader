@@ -1,12 +1,14 @@
-﻿<Window x:Class="HAcgReader.MainWindow"
+﻿<ui:UiWindow x:Class="HAcgReader.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:HAcgReader"
         xmlns:c="clr-namespace:HAcgReader.Converters"
         xmlns:r="clr-namespace:HAcgReader.Resources;assembly=HAcgReader.Resources"
         xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
+        Style="{StaticResource UiWindow}"
         DataContext="{Binding MainViewModel, RelativeSource={RelativeSource Self}}"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
@@ -23,13 +25,13 @@
             <!--右侧详情页-->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
-        <!--#region 左侧列表-->
-        <ListView x:Name="ArticleList"
-                  Grid.Column="0"
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView x:Name="ArticleList"
                   Grid.Row="0"
                   Margin="0,0,0,2"
                   DataContext="{Binding ArticleListViewModel}"
@@ -38,79 +40,84 @@
                   SelectedIndex="{Binding SelectedIndex}"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                    <Setter Property="Margin" Value="0,0,0,4"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Title}"
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Title}"
                                    FontWeight="Bold"/>
-                        <TextBlock Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
+                            <TextBlock Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
                                    Foreground="Gray"/>
-                        <ItemsControl ItemsSource="{Binding Categories}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding .}"
+                            <ItemsControl ItemsSource="{Binding Categories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding .}"
                                                Foreground="#1982D1"
                                                Margin="0,0,5,0"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <!--#endregion-->
-        <Button Grid.Column="0"
-                Grid.Row="1"
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ui:Button Grid.Row="1"
                 x:Name="FetchButton"
+                HorizontalAlignment="Stretch"
                 DataContext="{Binding FetchButtonViewModel}"
                 d:DataContext="{d:DesignInstance Type=viewmodels:FetchButtonViewModel}"
                 Command="{Binding Command}"
                 IsEnabled="{Binding IsEnabled}">
-            <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
-        </Button>
-        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="2" HorizontalAlignment="Stretch"/>
-        <!--#region 右侧详情页-->
-        <StackPanel x:Name="DetailPanel"
-                    Grid.Column="2"
-                    Grid.RowSpan="2"
+                <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
+            </ui:Button>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel x:Name="DetailPanel"
                     Margin="5,0,0,0"
                     DataContext="{Binding DetailPageViewModel}"
                     d:DataContext="{d:DesignInstance Type=viewmodels:DetailPageViewModel}"
                     Visibility="{Binding Visibility}"
                     d:Visibility="Visible">
-            <TextBlock Text="{Binding SelectedArticle.Title}"
+                <TextBlock Text="{Binding SelectedArticle.Title}"
                        d:Text="标题"
                        FontWeight="Bold"
                        FontSize="20"
                        Margin="0,0,0,3"/>
-            <StackPanel DataContext="{Binding SelectedArticle}">
-                <TextBlock Text="{x:Static r:Strings.MagnetLinksDetected}" d:Text="检测到的磁力链接（单击复制）" Margin="0,0,0,3"/>
-                <ItemsControl ItemsSource="{Binding MagnetLinks}" d:ItemsSource="{d:SampleData ItemCount=3}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Margin="0,0,0,1">
+                <StackPanel DataContext="{Binding SelectedArticle}">
+                    <TextBlock Text="{x:Static r:Strings.MagnetLinksDetected}" d:Text="检测到的磁力链接（单击复制）" Margin="0,0,0,3"/>
+                    <ItemsControl ItemsSource="{Binding MagnetLinks}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,0,0,1">
                                 <Hyperlink NavigateUri="{Binding .}" RequestNavigate="MagnetLink_RequestNavigate">
                                     <TextBlock Text="{Binding .}"/>
                                 </Hyperlink>
                             </TextBlock>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Separator/>
-                <TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Separator/>
+                    <TextBlock>
                     <TextBlock Text="{Binding Creator}" d:Text="Creator"/>
                     <TextBlock Text="{Binding PubDate, StringFormat={x:Static r:Strings.PublishingDate}}" d:Text="发布于 2020年1月1日"/>
                     |
@@ -122,17 +129,17 @@
                         <TextBlock Text="{Binding CommentCount, StringFormat={x:Static r:Strings.CommentCount}}" d:Text="50 条评论"/>
                     </Hyperlink>
                 </TextBlock>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <ProgressBar x:Name="Progress"
+
+            <ProgressBar x:Name="Progress"
                      Grid.Row="1"
-                     Grid.Column="2"
                      DataContext="{Binding ProgressBarViewModel}"
                      d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarViewModel}"
                      Value="{Binding Value}"
                      Minimum="0"
                      Maximum="{Binding Maximum}"
                      IsIndeterminate="{Binding IsIndeterminate}"/>
-        <!--#endregion-->
+        </Grid>
     </Grid>
-</Window>
+</ui:UiWindow>
