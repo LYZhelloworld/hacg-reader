@@ -5,10 +5,12 @@
 
 namespace HAcgReader.Controls
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
     using HAcgReader.Core.Models;
+    using Wpf.Ui.Controls;
 
     /// <summary>
     /// ArticleListControl.xaml 的交互逻辑
@@ -33,12 +35,30 @@ namespace HAcgReader.Controls
         }
 
         /// <summary>
+        /// 文章点击事件
+        /// </summary>
+        public event EventHandler<ArticleClickedEventArgs>? ArticleClicked;
+
+        /// <summary>
         /// 文章列表
         /// </summary>
         public IEnumerable<ArticleModel> Articles
         {
             get { return (IEnumerable<ArticleModel>)this.GetValue(ArticlesProperty); }
             set { this.SetValue(ArticlesProperty, value); }
+        }
+
+        /// <summary>
+        /// 文章点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void CardAction_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is CardAction cardAction)
+            {
+                this.ArticleClicked?.Invoke(this, new() { Article = (ArticleModel)cardAction.DataContext });
+            }
         }
     }
 }

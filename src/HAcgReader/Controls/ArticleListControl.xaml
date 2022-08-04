@@ -15,32 +15,25 @@
     <UserControl.Resources>
         <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
     </UserControl.Resources>
-    <ListView
+    <ItemsControl
         x:Name="ArticleList"
         Grid.Row="0"
         Margin="0,0,0,2"
         ItemsSource="{Binding Articles}"
-        d:SelectedIndex="0"
         ScrollViewer.VerticalScrollBarVisibility="Disabled"
         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-        <d:ListView.ItemsSource>
+        <d:ItemsControl.ItemsSource>
             <x:Array Type="{x:Type models:ArticleModel}">
-                <models:ArticleModel Title="标题 1">
-                </models:ArticleModel>
+                <models:ArticleModel/>
+                <models:ArticleModel/>
+                <models:ArticleModel/>
             </x:Array>
-        </d:ListView.ItemsSource>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="BorderBrush" Value="Gray"/>
-                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemTemplate>
+        </d:ItemsControl.ItemsSource>
+        <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <ui:CardAction>
+                <ui:CardAction Click="CardAction_Click">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Title}" FontWeight="Medium" FontSize="13"/>
+                        <TextBlock Text="{Binding Title}" d:Text="标题" FontWeight="Medium" FontSize="13"/>
                         <TextBlock
                             Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
                             Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
@@ -71,6 +64,6 @@
                     </StackPanel>
                 </ui:CardAction>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

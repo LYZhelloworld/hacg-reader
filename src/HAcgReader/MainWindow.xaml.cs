@@ -64,5 +64,15 @@ namespace HAcgReader
         {
             Wpf.Ui.Appearance.Watcher.Watch(this, Wpf.Ui.Appearance.BackgroundType.Mica, true);
         }
+
+        /// <summary>
+        /// 文章点击事件处理
+        /// </summary>
+        /// <param name="sender">事件发送者</param>
+        /// <param name="e">事件参数</param>
+        private void ArticleListControl_ArticleClicked(object sender, Controls.ArticleClickedEventArgs e)
+        {
+            this.MainViewModel.OnArticleClicked(e.Article);
+        }
     }
 }

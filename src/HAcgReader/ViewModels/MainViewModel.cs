@@ -9,6 +9,7 @@ namespace HAcgReader.ViewModels
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
+    using HAcgReader.Core.Models;
     using HAcgReader.Core.Services;
     using HAcgReader.Resources;
 
@@ -107,6 +108,16 @@ namespace HAcgReader.ViewModels
         }
 
         /// <summary>
+        /// 文章点击事件处理
+        /// </summary>
+        /// <param name="article">被点击的文章</param>
+        public void OnArticleClicked(ArticleModel article)
+        {
+            this.DetailPageViewModel.SelectedArticle = article;
+            this.DetailPageViewModel.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
         /// 拉取开始
         /// </summary>
         protected void OnFetchStarted()
@@ -184,12 +195,6 @@ namespace HAcgReader.ViewModels
         /// </summary>
         private void InitializeViewModelEventHandlers()
         {
-            this.ArticleListViewModel.ArticleSelected += (sender, e) =>
-            {
-                this.DetailPageViewModel.SelectedArticle = e.SelectedArticle;
-                this.DetailPageViewModel.Visibility = Visibility.Visible;
-            };
-
             this.FetchButtonViewModel.Started += (sender, e) =>
             {
                 this.fetchingCancellationTokenSource = new();

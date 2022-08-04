@@ -51,7 +51,8 @@
                 <controls:ArticleListControl
                     Grid.Row="0"
                     DataContext="{Binding ArticleListViewModel}"
-                    Articles="{Binding Articles}"/>
+                    Articles="{Binding Articles}"
+                    ArticleClicked="ArticleListControl_ArticleClicked"/>
 
                 <ui:Button Grid.Row="1"
                 x:Name="FetchButton"

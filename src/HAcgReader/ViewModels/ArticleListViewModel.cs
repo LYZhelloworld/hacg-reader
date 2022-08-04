@@ -26,16 +26,6 @@ namespace HAcgReader.ViewModels
         private List<ArticleModel> articles = new();
 
         /// <summary>
-        /// 被选中文章的下标
-        /// </summary>
-        private int selectedIndex = -1;
-
-        /// <summary>
-        /// 选中文章事件
-        /// </summary>
-        public event EventHandler<ArticleSelectedEventArgs>? ArticleSelected;
-
-        /// <summary>
         /// 文章列表
         /// </summary>
         public IEnumerable<ArticleModel> Articles
@@ -65,24 +55,6 @@ namespace HAcgReader.ViewModels
         /// 缓存中的文章个数
         /// </summary>
         public int CacheCount => this.articleCache.Count;
-
-        /// <summary>
-        /// 被选中文章的下标
-        /// </summary>
-        public int SelectedIndex
-        {
-            get => this.selectedIndex;
-            set
-            {
-                this.selectedIndex = value;
-                if (this.selectedIndex >= 0)
-                {
-                    this.ArticleSelected?.Invoke(this, new() { SelectedArticle = this.articles[this.SelectedIndex] });
-                }
-
-                this.OnPropertyChanged();
-            }
-        }
 
         /// <summary>
         /// 添加新文章到缓存，同时过滤掉链接相同的重复文章
