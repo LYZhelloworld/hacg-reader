@@ -6,64 +6,72 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:c="clr-namespace:HAcgReader.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
     xmlns:models="clr-namespace:HAcgReader.Core.Models;assembly=HAcgReader.Core"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:HAcgReader.Controls"
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800"
-    DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    d:DesignHeight="300" d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ArticleListViewModel}">
     <UserControl.Resources>
         <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
     </UserControl.Resources>
-    <ItemsControl
-        x:Name="ArticleList"
-        Grid.Row="0"
-        Margin="0,0,0,2"
-        ItemsSource="{Binding Articles}"
-        ScrollViewer.VerticalScrollBarVisibility="Disabled"
-        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-        <d:ItemsControl.ItemsSource>
-            <x:Array Type="{x:Type models:ArticleModel}">
-                <models:ArticleModel/>
-                <models:ArticleModel/>
-                <models:ArticleModel/>
-            </x:Array>
-        </d:ItemsControl.ItemsSource>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <ui:CardAction Click="CardAction_Click">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Title}" d:Text="标题" FontWeight="Medium" FontSize="13"/>
-                        <TextBlock
-                            Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
-                            Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
-                            FontSize="12"/>
-                        <ItemsControl ItemsSource="{Binding Categories}">
-                            <d:ItemsControl.ItemsSource>
-                                <x:Array Type="{x:Type system:String}">
-                                    <system:String>分类 1</system:String>
-                                    <system:String>分类 2</system:String>
-                                    <system:String>分类 3</system:String>
-                                </x:Array>
-                            </d:ItemsControl.ItemsSource>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ui:Badge
-                                        Content="{Binding .}"
-                                        Appearance="Primary"
-                                        FontSize="11"
-                                        Margin="0,0,4,0"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </StackPanel>
-                </ui:CardAction>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Hidden">
+
+        <ItemsControl ItemsSource="{Binding Articles}">
+
+            <d:ItemsControl.ItemsSource>
+                <x:Array Type="{x:Type models:ArticleModel}">
+                    <models:ArticleModel/>
+                    <models:ArticleModel/>
+                    <models:ArticleModel/>
+                </x:Array>
+            </d:ItemsControl.ItemsSource>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <ui:CardAction Click="CardAction_Click">
+                        <StackPanel Orientation="Vertical">
+
+                            <TextBlock Text="{Binding Title}" d:Text="标题" FontWeight="Medium" FontSize="13"/>
+                            <TextBlock
+                                Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+                                FontSize="12"/>
+
+                            <ItemsControl ItemsSource="{Binding Categories}">
+                                <d:ItemsControl.ItemsSource>
+                                    <x:Array Type="{x:Type system:String}">
+                                        <system:String>分类 1</system:String>
+                                        <system:String>分类 2</system:String>
+                                        <system:String>分类 3</system:String>
+                                    </x:Array>
+                                </d:ItemsControl.ItemsSource>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <ui:Badge
+                                            Content="{Binding .}"
+                                            Appearance="Primary"
+                                            FontSize="11"
+                                            Margin="0,0,4,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                        </StackPanel>
+                    </ui:CardAction>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+    </ScrollViewer>
+
 </UserControl>

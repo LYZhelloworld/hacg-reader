@@ -16,7 +16,7 @@ namespace HAcgReader.ViewModels
         /// <summary>
         /// 被选中的文章
         /// </summary>
-        private ArticleModel selectedArticle = new();
+        private ArticleModel article = new();
 
         /// <summary>
         /// 详情页可见性
@@ -26,12 +26,12 @@ namespace HAcgReader.ViewModels
         /// <summary>
         /// 被选中的文章
         /// </summary>
-        public ArticleModel SelectedArticle
+        public ArticleModel Article
         {
-            get => this.selectedArticle;
+            get => this.article;
             set
             {
-                this.selectedArticle = value;
+                this.article = value;
                 this.OnPropertyChanged();
             }
         }

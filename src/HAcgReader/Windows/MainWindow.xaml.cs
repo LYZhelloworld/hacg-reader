@@ -48,9 +48,6 @@ namespace HAcgReader.Windows
             this.MainViewModel = new MainViewModel(domain);
 
             this.InitializeComponent();
-
-            this.Loaded += this.AutoThemeChange;
-
             this.MainViewModel.FetchButtonViewModel.Command.Execute(null);
         }
 
@@ -58,14 +55,6 @@ namespace HAcgReader.Windows
         /// 主窗口视图模型
         /// </summary>
         public MainViewModel MainViewModel { get; private set; }
-
-        /// <summary>
-        /// 设置自动检测暗色模式
-        /// </summary>
-        private void AutoThemeChange(object sender, EventArgs e)
-        {
-            Wpf.Ui.Appearance.Watcher.Watch(this, Wpf.Ui.Appearance.BackgroundType.Mica, true);
-        }
 
         /// <summary>
         /// 文章点击事件处理

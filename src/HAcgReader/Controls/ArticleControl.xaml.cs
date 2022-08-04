@@ -26,7 +26,7 @@ namespace HAcgReader.Controls
             DependencyProperty.Register(
                 nameof(Article),
                 typeof(ArticleModel),
-                typeof(ArticleListControl));
+                typeof(ArticleControl));
 
         /// <summary>
         /// 构造函数

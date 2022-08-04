@@ -113,7 +113,7 @@ namespace HAcgReader.ViewModels
         /// <param name="article">被点击的文章</param>
         public void OnArticleClicked(ArticleModel article)
         {
-            this.DetailPageViewModel.SelectedArticle = article;
+            this.DetailPageViewModel.Article = article;
             this.DetailPageViewModel.Visibility = Visibility.Visible;
         }
 
