@@ -3,18 +3,20 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace HAcgReader
+namespace HAcgReader.Windows
 {
     using System;
     using System.Windows;
     using HAcgReader.Core.Services;
     using HAcgReader.Resources;
     using HAcgReader.ViewModels;
+    using Wpf.Ui.Controls;
+    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// MainWindow.xaml 交互逻辑
     /// </summary>
-    public partial class MainWindow : Wpf.Ui.Controls.UiWindow
+    public partial class MainWindow : UiWindow
     {
         /// <summary>
         /// 构造函数
