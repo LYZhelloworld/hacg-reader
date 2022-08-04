@@ -7,11 +7,12 @@ namespace HAcgReader.Windows
 {
     using System.Windows;
     using HAcgReader.ViewModels;
+    using Wpf.Ui.Controls;
 
     /// <summary>
     /// DomainDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class DomainDialog : Window
+    public partial class DomainDialog : UiWindow
     {
         /// <summary>
         /// 构造函数
