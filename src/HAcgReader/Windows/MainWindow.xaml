@@ -1,0 +1,79 @@
+﻿<Window
+    x:Class="HAcgReader.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:local="clr-namespace:HAcgReader.Windows"
+    xmlns:c="clr-namespace:HAcgReader.Converters"
+    xmlns:r="clr-namespace:HAcgReader.Resources;assembly=HAcgReader.Resources"
+    xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
+    xmlns:controls="clr-namespace:HAcgReader.Controls"
+    WindowStartupLocation="CenterScreen"
+    DataContext="{Binding MainViewModel, RelativeSource={RelativeSource Self}}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    mc:Ignorable="d"
+    Title="{x:Static r:Strings.Title}" Height="500" Width="900">
+    <Window.Resources>
+        <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
+    </Window.Resources>
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <controls:ArticleListControl
+                Grid.Row="0"
+                DataContext="{Binding ArticleListViewModel}"
+                Articles="{Binding Articles}"
+                ArticleClicked="ArticleListControl_ArticleClicked"/>
+
+            <ui:Button
+                Grid.Row="1"
+                x:Name="FetchButton"
+                HorizontalAlignment="Stretch"
+                DataContext="{Binding FetchButtonViewModel}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:FetchButtonViewModel}"
+                Command="{Binding Command}"
+                IsEnabled="{Binding IsEnabled}">
+
+                <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
+
+            </ui:Button>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <controls:ArticleControl
+                Grid.Row="0"
+                DataContext="{Binding DetailPageViewModel}"
+                Article="{Binding Article}"
+                Visibility="{Binding Visibility}"/>
+
+            <ProgressBar
+                x:Name="Progress"
+                Grid.Row="1"
+                DataContext="{Binding ProgressBarViewModel}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarViewModel}"
+                Value="{Binding Value}"
+                Minimum="0"
+                Maximum="{Binding Maximum}"
+                IsIndeterminate="{Binding IsIndeterminate}"/>
+        </Grid>
+    </Grid>
+</Window>

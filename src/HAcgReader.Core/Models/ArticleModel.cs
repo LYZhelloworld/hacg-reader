@@ -26,6 +26,11 @@ namespace HAcgReader.Core.Models
         public string CommentLink { get; set; } = string.Empty;
 
         /// <summary>
+        /// 页面预览
+        /// </summary>
+        public string Preview { get; set; } = string.Empty;
+
+        /// <summary>
         /// 解析出的磁力链接
         /// </summary>
         public IEnumerable<string> MagnetLinks { get; set; } = Enumerable.Empty<string>();
