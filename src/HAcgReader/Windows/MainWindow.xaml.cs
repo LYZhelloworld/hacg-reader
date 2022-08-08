@@ -10,13 +10,11 @@ namespace HAcgReader.Windows
     using HAcgReader.Core.Services;
     using HAcgReader.Resources;
     using HAcgReader.ViewModels;
-    using Wpf.Ui.Controls;
-    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// MainWindow.xaml 交互逻辑
     /// </summary>
-    public partial class MainWindow : UiWindow
+    public partial class MainWindow : Window
     {
         /// <summary>
         /// 构造函数

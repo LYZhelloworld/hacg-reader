@@ -1,4 +1,4 @@
-﻿<ui:UiWindow
+﻿<Window
     x:Class="HAcgReader.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,9 +10,6 @@
     xmlns:r="clr-namespace:HAcgReader.Resources;assembly=HAcgReader.Resources"
     xmlns:viewmodels="clr-namespace:HAcgReader.ViewModels"
     xmlns:controls="clr-namespace:HAcgReader.Controls"
-    ExtendsContentIntoTitleBar="True"
-    WindowBackdropType="Mica"
-    WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
     DataContext="{Binding MainViewModel, RelativeSource={RelativeSource Self}}"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
@@ -21,78 +18,62 @@
     <Window.Resources>
         <c:MagnetLinkCountConverter x:Key="MagnetLinkCountConverter"/>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
 
-        <ui:TitleBar Grid.Row="0"
-                     Title="{x:Static r:Strings.Title}"
-                     ShowMaximize="True"
-                     ShowMinimize="True"
-                     UseSnapLayout="True"
-                     BorderThickness="1"
-                     BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
-        </ui:TitleBar>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="2"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
+            <controls:ArticleListControl
+                Grid.Row="0"
+                DataContext="{Binding ArticleListViewModel}"
+                Articles="{Binding Articles}"
+                ArticleClicked="ArticleListControl_ArticleClicked"/>
 
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <ui:Button
+                Grid.Row="1"
+                x:Name="FetchButton"
+                HorizontalAlignment="Stretch"
+                DataContext="{Binding FetchButtonViewModel}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:FetchButtonViewModel}"
+                Command="{Binding Command}"
+                IsEnabled="{Binding IsEnabled}">
 
-                <controls:ArticleListControl
-                    Grid.Row="0"
-                    DataContext="{Binding ArticleListViewModel}"
-                    Articles="{Binding Articles}"
-                    ArticleClicked="ArticleListControl_ArticleClicked"/>
+                <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
 
-                <ui:Button
-                    Grid.Row="1"
-                    x:Name="FetchButton"
-                    HorizontalAlignment="Stretch"
-                    DataContext="{Binding FetchButtonViewModel}"
-                    d:DataContext="{d:DesignInstance Type=viewmodels:FetchButtonViewModel}"
-                    Command="{Binding Command}"
-                    IsEnabled="{Binding IsEnabled}">
-                    
-                    <TextBlock Text="{Binding ButtonText}" d:Text="更多"/>
-                    
-                </ui:Button>
-            </Grid>
+            </ui:Button>
+        </Grid>
 
-            <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
+        <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch"/>
 
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-                <controls:ArticleControl
-                    Grid.Row="0"
-                    DataContext="{Binding DetailPageViewModel}"
-                    Article="{Binding Article}"
-                    Visibility="{Binding Visibility}"/>
+            <controls:ArticleControl
+                Grid.Row="0"
+                DataContext="{Binding DetailPageViewModel}"
+                Article="{Binding Article}"
+                Visibility="{Binding Visibility}"/>
 
-                <ProgressBar
-                    x:Name="Progress"
-                    Grid.Row="1"
-                    DataContext="{Binding ProgressBarViewModel}"
-                    d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarViewModel}"
-                    Value="{Binding Value}"
-                    Minimum="0"
-                    Maximum="{Binding Maximum}"
-                    IsIndeterminate="{Binding IsIndeterminate}"/>
-            </Grid>
+            <ProgressBar
+                x:Name="Progress"
+                Grid.Row="1"
+                DataContext="{Binding ProgressBarViewModel}"
+                d:DataContext="{d:DesignInstance Type=viewmodels:ProgressBarViewModel}"
+                Value="{Binding Value}"
+                Minimum="0"
+                Maximum="{Binding Maximum}"
+                IsIndeterminate="{Binding IsIndeterminate}"/>
         </Grid>
     </Grid>
-</ui:UiWindow>
+</Window>
