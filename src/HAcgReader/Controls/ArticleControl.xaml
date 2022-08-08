@@ -15,11 +15,13 @@
         x:Name="DetailPanel"
         Margin="5,0,0,0"
         DataContext="{Binding Article}">
-        <TextBlock Text="{Binding Title}"
-                       d:Text="标题"
-                       FontWeight="Bold"
-                       FontSize="20"
-                       Margin="0,0,0,3"/>
+        <TextBlock
+            Text="{Binding Title}"
+            d:Text="标题"
+            FontWeight="Bold"
+            FontSize="20"
+            Margin="0,0,0,3"
+            TextWrapping="Wrap"/>
         <StackPanel>
             <TextBlock Text="{x:Static r:Strings.MagnetLinksDetected}" Margin="0,0,0,3"/>
             <ItemsControl ItemsSource="{Binding MagnetLinks}" d:ItemsSource="{d:SampleData ItemCount=3}">

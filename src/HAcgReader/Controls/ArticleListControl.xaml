@@ -36,7 +36,7 @@
                     <ui:CardAction Click="CardAction_Click">
                         <StackPanel Orientation="Vertical">
 
-                            <TextBlock Text="{Binding Title}" d:Text="标题" FontWeight="Medium" FontSize="13"/>
+                            <TextBlock Text="{Binding Title}" d:Text="标题" FontWeight="Medium" FontSize="13" TextWrapping="Wrap"/>
                             <TextBlock
                                 Text="{Binding MagnetLinks, Converter={StaticResource MagnetLinkCountConverter}}"
                                 Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
@@ -61,7 +61,7 @@
                                 </ItemsControl.ItemTemplate>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal"/>
+                                        <WrapPanel/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
