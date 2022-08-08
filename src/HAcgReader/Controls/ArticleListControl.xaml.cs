@@ -55,9 +55,9 @@ namespace HAcgReader.Controls
         /// <param name="e">事件参数</param>
         private void CardAction_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is CardAction cardAction)
+            if (sender is CardAction cardAction && cardAction.DataContext is ArticleModel article)
             {
-                this.ArticleClicked?.Invoke(this, new() { Article = (ArticleModel)cardAction.DataContext });
+                this.ArticleClicked?.Invoke(this, new() { Article = article });
             }
         }
     }

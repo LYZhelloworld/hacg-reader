@@ -5,6 +5,7 @@
 
 namespace HAcgReader.Core.Services
 {
+    using System.Linq;
     using System.Text.RegularExpressions;
     using HAcgReader.Core.Factories;
     using HAcgReader.Core.Models;
@@ -66,7 +67,8 @@ namespace HAcgReader.Core.Services
                 return article;
             }
 
-            article.MagnetLinks = Parse(response.Content!.ReadAsStream(default));
+            article.MagnetLinks = Parse(response.Content!.ReadAsStream(default), out var entryContent);
+            article.Preview = entryContent;
             return article;
         }
 
@@ -74,11 +76,14 @@ namespace HAcgReader.Core.Services
         /// 解析返回的内容
         /// </summary>
         /// <param name="content">返回内容</param>
+        /// <param name="preview">解析出的预览文本</param>
         /// <returns>解析出的磁链集合</returns>
-        private static IEnumerable<string> Parse(Stream content)
+        private static IEnumerable<string> Parse(Stream content, out string preview)
         {
             var doc = new HtmlDocument();
             doc.Load(content);
+
+            preview = string.Empty;
 
             // 寻找 <div class="entry-content">
             var entryContentTags = doc.DocumentNode.SelectNodes("//div[@class=\"entry-content\"]");
@@ -87,6 +92,9 @@ namespace HAcgReader.Core.Services
                 // 没有找到对应标签
                 return Array.Empty<string>();
             }
+
+            preview = string.Join(string.Empty, entryContentTags.AsEnumerable()
+                .Select(GeneratePreview)).Trim();
 
             return entryContentTags.AsEnumerable()
                 .Select(entryContentTag => entryContentTag.InnerHtml)
@@ -97,6 +105,30 @@ namespace HAcgReader.Core.Services
                 })
                 .SelectMany(i => i)
                 .Select(i => MagnetPrefix + i);
+        }
+
+        /// <summary>
+        /// 解析正文内容，去除不需要的标签并生成纯文本预览
+        /// </summary>
+        /// <param name="tag">当前 HTML 标签</param>
+        /// <returns>预览文本</returns>
+        private static string GeneratePreview(HtmlNode tag)
+        {
+            return tag.NodeType switch
+            {
+                HtmlNodeType.Text => tag.InnerText.Trim(),
+                HtmlNodeType.Element => tag.Name switch
+                {
+                    "p" or "div" =>
+                        Environment.NewLine +
+                        string.Join(string.Empty, tag.ChildNodes.AsEnumerable().Select(GeneratePreview)).Trim() +
+                        Environment.NewLine,
+                    "span" => string.Join(string.Empty, tag.ChildNodes.AsEnumerable().Select(GeneratePreview)).Trim(),
+                    "br" => Environment.NewLine,
+                    _ => string.Empty,
+                },
+                _ => string.Empty,
+            };
         }
     }
 }

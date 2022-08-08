@@ -9,6 +9,7 @@
     <Company>Helloworld</Company>
     <PackageProjectUrl>https://github.com/LYZhelloworld/hacg-reader</PackageProjectUrl>
     <AnalysisLevel>latest-all</AnalysisLevel>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   
   <ItemGroup>

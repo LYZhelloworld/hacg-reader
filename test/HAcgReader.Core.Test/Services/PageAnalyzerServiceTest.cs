@@ -26,7 +26,7 @@ namespace HAcgReader.Core.Test.Services
         /// 测试 <see cref="PageAnalyzerService.Analyze(ArticleModel, CancellationToken)"/>
         /// </summary>
         [TestMethod]
-        public void TestAnalyzeAsync()
+        public void TestAnalyze()
         {
             var htmlLocation = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
@@ -56,6 +56,23 @@ namespace HAcgReader.Core.Test.Services
             "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567",
             "magnet:?xt=urn:btih:9876543210abcdef0123456789abcdef01234567",
             });
+
+            article.Preview.Should().Be(@"Lorem ipsum dolor sit amet,
+
+consectetur adipiscing elit,
+
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+0123456789abcdef0123456789abcdef01234567
+Ut enim ad minim veniam,
+
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+9876543210abcdef0123456789abcdef01234567
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+0123456789abcdef0123456789abcdef01234567");
         }
 
         /// <summary>
