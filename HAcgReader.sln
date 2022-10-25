@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0183067B-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{1213AECC-F0EB-4ACF-868D-37EFFF12E555}"
 	ProjectSection(SolutionItems) = preProject
-		shared\.editorconfig = shared\.editorconfig
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Directory.build.props = Directory.build.props
 		LICENSE = LICENSE
